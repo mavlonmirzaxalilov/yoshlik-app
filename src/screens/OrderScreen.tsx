@@ -6,7 +6,6 @@ import { PaymentMethodSelector } from "../components/PaymentMethodSelector";
 import { BillSummary } from "../components/BillSummary";
 import { calcGrandTotal, formatDistance, formatPrice } from "../lib/pricing";
 import { placeOrder } from "../lib/orders";
-import { WebApp } from "../lib/telegram";
 
 interface OrderScreenProps {
   onBack: () => void;
@@ -50,17 +49,9 @@ export function OrderScreen({ onBack, onOrderPlaced }: OrderScreenProps) {
       clear();
       onOrderPlaced(orderNumber);
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Buyurtmani saqlashda xatolik yuz berdi";
-
-      const tgWebApp = (window as unknown as { Telegram?: { WebApp?: typeof WebApp } })
-        .Telegram?.WebApp;
-      const debugInfo = [
-        `initData uzunligi: ${tgWebApp?.initData?.length ?? "N/A"}`,
-        `initDataUnsafe: ${JSON.stringify(tgWebApp?.initDataUnsafe ?? null)}`,
-      ].join("\n");
-
-      setSubmitError(`${message}\n\n[DEBUG]\n${debugInfo}`);
+      setSubmitError(
+        err instanceof Error ? err.message : "Buyurtmani saqlashda xatolik yuz berdi"
+      );
       setSubmitting(false);
     }
   };
@@ -142,9 +133,9 @@ export function OrderScreen({ onBack, onOrderPlaced }: OrderScreenProps) {
       <div className="fixed inset-x-0 bottom-0 z-20 flex justify-center pb-4">
         <div className="w-full max-w-[390px] px-4">
           {submitError && (
-            <pre className="mb-2 max-h-60 overflow-auto whitespace-pre-wrap break-words rounded-xl bg-red-50 px-3 py-2 text-left text-[11px] leading-snug text-red-600">
+            <p className="mb-2 rounded-xl bg-red-50 px-3 py-2 text-center text-xs text-red-500">
               {submitError}
-            </pre>
+            </p>
           )}
           <button
             onClick={handleConfirm}
