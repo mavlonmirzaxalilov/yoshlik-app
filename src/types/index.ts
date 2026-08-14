@@ -22,4 +22,11 @@ export interface CartItem {
 }
 
 export type OrderType = "delivery" | "pickup" | "dine_in";
-export type PaymentMethod = "cash" | "click_payme";
+export type PaymentMethod = "cash" | "online";
+
+export interface BotUser {
+  telegram_id: number;
+  first_name: string | null;
+  last_name: string | null;
+  phone: string | null;
+}

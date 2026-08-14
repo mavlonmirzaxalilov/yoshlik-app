@@ -9,4 +9,12 @@ export function initTelegram() {
   }
 }
 
+export function getTelegramUser() {
+  try {
+    return WebApp.initDataUnsafe?.user ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export { WebApp };

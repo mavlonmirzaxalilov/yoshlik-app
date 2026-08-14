@@ -5,11 +5,11 @@ import { OrderTypeSelector } from "../components/OrderTypeSelector";
 import { PaymentMethodSelector } from "../components/PaymentMethodSelector";
 import { BillSummary } from "../components/BillSummary";
 import { calcGrandTotal, formatDistance, formatPrice } from "../lib/pricing";
-import { WebApp } from "../lib/telegram";
+import { placeOrder } from "../lib/orders";
 
 interface OrderScreenProps {
   onBack: () => void;
-  onOrderPlaced: () => void;
+  onOrderPlaced: (orderNumber: number) => void;
 }
 
 export function OrderScreen({ onBack, onOrderPlaced }: OrderScreenProps) {
@@ -25,38 +25,35 @@ export function OrderScreen({ onBack, onOrderPlaced }: OrderScreenProps) {
     requestLocation,
   } = useOrder();
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const grandTotal = calcGrandTotal(foodTotal, orderType, totalQuantity, distanceKm);
   const addressMissing = orderType === "delivery" && address.trim() === "";
   const locationMissing = orderType === "delivery" && distanceKm == null;
   const canConfirm = items.length > 0 && !addressMissing && !locationMissing && !submitting;
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!canConfirm) return;
     setSubmitting(true);
-
-    const payload = {
-      items: items.map((item) => ({
-        id: item.product.id,
-        name: item.product.name,
-        price: item.product.price,
-        quantity: item.quantity,
-      })),
-      orderType,
-      address: orderType === "delivery" ? address.trim() : null,
-      distanceKm: orderType === "delivery" ? distanceKm : null,
-      paymentMethod,
-      total: grandTotal,
-    };
+    setSubmitError(null);
 
     try {
-      WebApp.sendData(JSON.stringify(payload));
-    } catch {
-      // Telegram tashqarisida (brauzerda) ishlatilganda jim o'tkazib yuboriladi
-    }
+      const { orderNumber } = await placeOrder({
+        items,
+        orderType,
+        address: orderType === "delivery" ? address.trim() : null,
+        distanceKm: orderType === "delivery" ? distanceKm : null,
+        paymentMethod,
+      });
 
-    clear();
-    onOrderPlaced();
+      clear();
+      onOrderPlaced(orderNumber);
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error ? err.message : "Buyurtmani saqlashda xatolik yuz berdi"
+      );
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -135,12 +132,19 @@ export function OrderScreen({ onBack, onOrderPlaced }: OrderScreenProps) {
 
       <div className="fixed inset-x-0 bottom-0 z-20 flex justify-center pb-4">
         <div className="w-full max-w-[390px] px-4">
+          {submitError && (
+            <p className="mb-2 rounded-xl bg-red-50 px-3 py-2 text-center text-xs text-red-500">
+              {submitError}
+            </p>
+          )}
           <button
             onClick={handleConfirm}
             disabled={!canConfirm}
             className="flex w-full items-center justify-center gap-2 rounded-2xl bg-green-600 py-4 text-sm font-bold text-white shadow-lg shadow-green-600/30 transition-transform active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-300 disabled:shadow-none"
           >
-            Buyurtmani tasdiqlash · {formatPrice(grandTotal)} so'm
+            {submitting
+              ? "Saqlanmoqda..."
+              : `Buyurtmani tasdiqlash · ${formatPrice(grandTotal)} so'm`}
           </button>
         </div>
       </div>

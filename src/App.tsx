@@ -11,6 +11,7 @@ type Screen = "menu" | "cart" | "order" | "success";
 
 function App() {
   const [screen, setScreen] = useState<Screen>("menu");
+  const [orderNumber, setOrderNumber] = useState<number | null>(null);
 
   useEffect(() => {
     initTelegram();
@@ -32,11 +33,17 @@ function App() {
           {screen === "order" && (
             <OrderScreen
               onBack={() => setScreen("cart")}
-              onOrderPlaced={() => setScreen("success")}
+              onOrderPlaced={(number) => {
+                setOrderNumber(number);
+                setScreen("success");
+              }}
             />
           )}
           {screen === "success" && (
-            <SuccessScreen onBackToMenu={() => setScreen("menu")} />
+            <SuccessScreen
+              orderNumber={orderNumber}
+              onBackToMenu={() => setScreen("menu")}
+            />
           )}
         </div>
       </OrderProvider>

@@ -3,7 +3,7 @@ import { useOrder } from "../context/OrderContext";
 
 const OPTIONS: { method: PaymentMethod; label: string; emoji: string }[] = [
   { method: "cash", label: "Naqd", emoji: "💵" },
-  { method: "click_payme", label: "Click-Payme", emoji: "💳" },
+  { method: "online", label: "Click-Payme", emoji: "💳" },
 ];
 
 export function PaymentMethodSelector() {
