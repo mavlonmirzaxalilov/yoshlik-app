@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #F27320;
+  --color-primary-dark: #D9631A;
+  --color-primary-light: #FDEEE3;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: #F7F7F8;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: none;
+}
+
+#root {
+  max-width: 390px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  background: #F7F7F8;
+  position: relative;
+}
+
+/* Scrollbarni yashirish (gorizontal chip qatori uchun) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
