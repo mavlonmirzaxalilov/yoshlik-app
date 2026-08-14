@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CartProvider } from "./context/CartContext";
 import { OrderProvider } from "./context/OrderContext";
-import { initTelegram } from "./lib/telegram";
 import { MenuScreen } from "./screens/MenuScreen";
 import { CartScreen } from "./screens/CartScreen";
 import { OrderScreen } from "./screens/OrderScreen";
@@ -12,10 +11,6 @@ type Screen = "menu" | "cart" | "order" | "success";
 function App() {
   const [screen, setScreen] = useState<Screen>("menu");
   const [orderNumber, setOrderNumber] = useState<number | null>(null);
-
-  useEffect(() => {
-    initTelegram();
-  }, []);
 
   return (
     <CartProvider>

@@ -11,8 +11,13 @@ export function initTelegram() {
 
 export function getTelegramUser() {
   try {
-    return WebApp.initDataUnsafe?.user ?? null;
-  } catch {
+    const wa = WebApp;
+    console.log("initData:", wa.initData);
+    console.log("initDataUnsafe:", JSON.stringify(wa.initDataUnsafe));
+    console.log("user:", wa.initDataUnsafe?.user);
+    return wa.initDataUnsafe?.user ?? null;
+  } catch (e) {
+    console.log("Xato:", e);
     return null;
   }
 }
