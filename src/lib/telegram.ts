@@ -1,9 +1,20 @@
-import WebApp from "@twa-dev/sdk";
+declare global {
+  interface Window {
+    Telegram?: { WebApp?: any };
+  }
+}
+
+function getWebApp() {
+  return typeof window !== "undefined" ? window.Telegram?.WebApp : undefined;
+}
 
 export function initTelegram() {
   try {
-    WebApp.ready();
-    WebApp.expand();
+    const wa = getWebApp();
+    if (wa) {
+      wa.ready();
+      wa.expand();
+    }
   } catch {
     // Telegram tashqarisida (brauzerda) ishga tushirilganda jim o'tkazib yuboriladi
   }
@@ -11,10 +22,8 @@ export function initTelegram() {
 
 export function getTelegramUser() {
   try {
-    return WebApp.initDataUnsafe?.user ?? null;
+    return getWebApp()?.initDataUnsafe?.user ?? null;
   } catch {
     return null;
   }
 }
-
-export { WebApp };
