@@ -13,6 +13,7 @@
     "@supabase/supabase-js": "^2.112.3",
     "@tailwindcss/vite": "^4.3.3",
     "@twa-dev/sdk": "^8.0.2",
+    "@twemoji/api": "^17.0.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "tailwindcss": "^4.3.3"

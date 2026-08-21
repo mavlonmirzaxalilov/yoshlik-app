@@ -13,6 +13,7 @@ html {
 body {
   margin: 0;
   background: #F7F7F8;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior-y: none;
@@ -33,4 +34,20 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+/* Twemoji rasmlari matn bilan bir qatorda tursin */
+img.emoji {
+  height: 1.1em;
+  width: 1.1em;
+  display: inline-block;
+  margin: 0 0.05em 0 0.05em;
+  vertical-align: -0.15em;
+}
+/* Noto Emoji rasmlari matn bilan bir qatorda tursin */
+img.emoji {
+  height: 1.15em;
+  width: 1.15em;
+  display: inline-block;
+  margin: 0 0.05em;
+  vertical-align: -0.15em;
 }

@@ -7,7 +7,7 @@ export function CartBar({ onOpenCart }: { onOpenCart: () => void }) {
   if (totalQuantity === 0) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-20 flex justify-center pb-4">
+    <div className="fixed inset-x-0 bottom-16 z-20 flex justify-center pb-2">
       <div className="w-full max-w-[390px] px-4">
         <button
           onClick={onOpenCart}

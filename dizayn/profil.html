@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html lang="uz">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Yoshlik Kafe - Profil</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e2e2e3",
+                        "surface-bright": "#f9f9fa",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#341100",
+                        "primary-fixed": "#ffdbca",
+                        "on-surface-variant": "#584237",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#00210c",
+                        "on-secondary-fixed-variant": "#005228",
+                        "primary-container": "#f27320",
+                        "on-surface": "#1a1c1d",
+                        "tertiary-fixed": "#ffdad5",
+                        "on-primary-fixed-variant": "#783200",
+                        "surface-container": "#eeeeef",
+                        "on-secondary-container": "#007239",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#ffb690",
+                        "surface-container-high": "#e8e8e9",
+                        "primary-fixed-dim": "#ffb690",
+                        "on-primary-container": "#542100",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#ff6553",
+                        "background": "#f9f9fa",
+                        "surface": "#f9f9fa",
+                        "secondary": "#006d37",
+                        "secondary-container": "#7bf8a1",
+                        "on-tertiary-fixed-variant": "#910807",
+                        "secondary-fixed-dim": "#61de8a",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f3f3f4",
+                        "inverse-surface": "#2f3132",
+                        "outline-variant": "#dfc0b2",
+                        "on-background": "#1a1c1d",
+                        "inverse-on-surface": "#f0f1f2",
+                        "tertiary-fixed-dim": "#ffb4a9",
+                        "surface-dim": "#dadadb",
+                        "secondary-fixed": "#7efba4",
+                        "tertiary": "#b4271d",
+                        "surface-container-highest": "#e2e2e3",
+                        "surface-tint": "#9d4300",
+                        "outline": "#8b7265",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#680001",
+                        "error-container": "#ffdad6",
+                        "primary": "#9d4300",
+                        "on-tertiary-fixed": "#410000"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "unit": "4px",
+                        "container-padding": "16px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "price-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "price-lg": ["18px", { "lineHeight": "24px", "fontWeight": "700" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background pb-[80px]">
+    <!-- Header Section -->
+    <header class="bg-primary-container rounded-b-xl px-md pt-lg pb-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)]">
+        <div class="flex items-center justify-between mb-lg">
+            <div class="w-8"></div> <!-- Spacer for center alignment -->
+            <h1 class="font-headline-sm text-headline-sm text-on-primary">Profil</h1>
+            <button class="text-on-primary opacity-80 hover:opacity-100 transition-opacity">
+                <span class="material-symbols-outlined" data-icon="settings">settings</span>
+            </button>
+        </div>
+        <div class="flex items-center gap-md">
+            <div
+                class="w-[64px] h-[64px] bg-white rounded-full flex items-center justify-center text-primary-container shrink-0">
+                <span class="material-symbols-outlined text-[32px]" data-icon="person">person</span>
+            </div>
+            <div>
+                <h2 class="font-headline-sm text-headline-sm text-on-primary">Jasur Akhmedov</h2>
+                <p class="font-body-md text-body-md text-on-primary/80">+998 90 123 45 67</p>
+            </div>
+        </div>
+    </header>
+    <main class="px-md mt-lg space-y-lg">
+        <!-- Statistika (Statistics) -->
+        <section class="grid grid-cols-2 gap-md">
+            <div
+                class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-surface-container-highest flex items-center gap-sm">
+                <div class="w-10 h-10 bg-primary-fixed rounded-lg flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined filled" data-icon="shopping_bag">shopping_bag</span>
+                </div>
+                <div>
+                    <p class="font-label-md text-label-md text-on-surface-variant">Buyurtmalar</p>
+                    <p class="font-headline-sm text-headline-sm text-on-surface">12</p>
+                </div>
+            </div>
+            <div
+                class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-surface-container-highest flex items-center gap-sm">
+                <div class="w-10 h-10 bg-primary-fixed rounded-lg flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined filled"
+                        data-icon="account_balance_wallet">account_balance_wallet</span>
+                </div>
+                <div>
+                    <p class="font-label-md text-label-md text-on-surface-variant">Jami</p>
+                    <p class="font-headline-sm text-headline-sm text-on-surface">540 000</p>
+                </div>
+            </div>
+        </section>
+        <!-- Faol Buyurtma (Active Order) -->
+        <section
+            class="bg-primary-fixed/30 border border-primary-fixed rounded-xl p-md shadow-[0px_4px_12px_rgba(0,0,0,0.05)]">
+            <div class="flex justify-between items-center mb-md">
+                <h3 class="font-headline-sm text-headline-sm text-on-surface">Faol buyurtma #42</h3>
+                <span
+                    class="bg-primary-container text-on-primary font-label-md text-label-md px-3 py-1 rounded-full">Tayyorlanmoqda</span>
+            </div>
+            <!-- Stepper -->
+            <div class="flex items-center justify-between mb-md relative">
+                <div class="absolute left-[10%] right-[10%] top-1/2 -translate-y-1/2 h-[2px] bg-outline-variant z-0">
+                </div>
+                <div class="absolute left-[10%] right-[50%] top-1/2 -translate-y-1/2 h-[2px] bg-primary-container z-0">
+                </div>
+                <div class="flex flex-col items-center gap-xs z-10 relative bg-primary-fixed/30 px-1">
+                    <div class="w-6 h-6 rounded-full bg-secondary text-white flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[14px]" data-icon="check">check</span>
+                    </div>
+                    <span class="font-label-md text-label-md text-on-surface-variant text-[10px]">Qabul qilindi</span>
+                </div>
+                <div class="flex flex-col items-center gap-xs z-10 relative bg-primary-fixed/30 px-1">
+                    <div
+                        class="w-6 h-6 rounded-full bg-primary-container border-2 border-white text-white flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[14px]" data-icon="soup_kitchen">soup_kitchen</span>
+                    </div>
+                    <span class="font-label-md text-label-md text-primary font-bold text-[10px]">Tayyorlanmoqda</span>
+                </div>
+                <div class="flex flex-col items-center gap-xs z-10 relative bg-primary-fixed/30 px-1">
+                    <div
+                        class="w-6 h-6 rounded-full bg-surface-container-high border-2 border-white text-on-surface-variant flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[14px]"
+                            data-icon="local_shipping">local_shipping</span>
+                    </div>
+                    <span class="font-label-md text-label-md text-on-surface-variant text-[10px]">Tayyor</span>
+                </div>
+            </div>
+            <div class="flex justify-between items-end border-t border-primary-fixed pt-md">
+                <p class="font-body-md text-body-md text-on-surface-variant w-2/3">2 ta burger, 1 ta Coca-Cola</p>
+                <p class="font-price-lg text-price-lg text-primary-container">65 000 so'm</p>
+            </div>
+        </section>
+        <!-- Buyurtmalar Tarixi (Order History) -->
+        <section>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface mb-md">Buyurtmalar tarixi</h3>
+            <div class="space-y-sm">
+                <!-- History Item 1 -->
+                <div
+                    class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-surface-container-highest">
+                    <div class="flex justify-between items-center mb-sm">
+                        <span class="font-label-md text-label-md text-on-surface-variant">#41 | 12.10.2023</span>
+                        <span
+                            class="bg-secondary/20 text-on-secondary-fixed-variant font-label-md text-label-md px-2 py-0.5 rounded-full">Yakunlandi</span>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface mb-sm">Osh, Lag'mon, Choy</p>
+                    <p class="font-price-lg text-price-lg text-primary-container">95 000 so'm</p>
+                </div>
+                <!-- History Item 2 -->
+                <div
+                    class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-surface-container-highest">
+                    <div class="flex justify-between items-center mb-sm">
+                        <span class="font-label-md text-label-md text-on-surface-variant">#40 | 10.10.2023</span>
+                        <span class="bg-error/10 text-error font-label-md text-label-md px-2 py-0.5 rounded-full">Bekor
+                            qilindi</span>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface mb-sm">Pitsa, Pepsi</p>
+                    <p class="font-price-lg text-price-lg text-primary-container">120 000 so'm</p>
+                </div>
+            </div>
+        </section>
+        <!-- Settings List -->
+        <section
+            class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-surface-container-highest mb-lg overflow-hidden">
+            <button
+                class="w-full flex items-center justify-between p-md border-b border-surface-container-highest hover:bg-surface-variant/20 transition-colors">
+                <div class="flex items-center gap-sm">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[20px]" data-icon="badge">badge</span>
+                    </div>
+                    <span class="font-body-lg text-body-lg text-on-surface">Ism va telefon</span>
+                </div>
+                <span class="material-symbols-outlined text-on-surface-variant"
+                    data-icon="chevron_right">chevron_right</span>
+            </button>
+            <button
+                class="w-full flex items-center justify-between p-md border-b border-surface-container-highest hover:bg-surface-variant/20 transition-colors">
+                <div class="flex items-center gap-sm">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[20px]" data-icon="help">help</span>
+                    </div>
+                    <span class="font-body-lg text-body-lg text-on-surface">Yordam</span>
+                </div>
+                <span class="material-symbols-outlined text-on-surface-variant"
+                    data-icon="chevron_right">chevron_right</span>
+            </button>
+            <button class="w-full flex items-center justify-between p-md hover:bg-surface-variant/20 transition-colors">
+                <div class="flex items-center gap-sm">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[20px]" data-icon="language">language</span>
+                    </div>
+                    <span class="font-body-lg text-body-lg text-on-surface">Til</span>
+                </div>
+                <div class="flex items-center gap-xs">
+                    <span class="font-body-md text-body-md text-on-surface-variant">O'zbek</span>
+                    <span class="material-symbols-outlined text-on-surface-variant"
+                        data-icon="chevron_right">chevron_right</span>
+                </div>
+            </button>
+        </section>
+    </main>
+    <!-- Bottom Navigation Bar -->
+    <nav
+        class="bg-surface-container-lowest dark:bg-inverse-surface shadow-[0px_-4px_12px_rgba(0,0,0,0.05)] shadow-lg fixed bottom-0 w-full rounded-t-xl fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe md:hidden">
+        <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/20 active:scale-90 transition-all duration-200 p-2 rounded-lg"
+            href="#">
+            <span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+            <span class="font-label-md text-label-md">Asosiy</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/20 active:scale-90 transition-all duration-200 p-2 rounded-lg"
+            href="#">
+            <span class="material-symbols-outlined mb-1" data-icon="reorder">reorder</span>
+            <span class="font-label-md text-label-md">Buyurtmalar</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant hover:bg-surface-variant/20 active:scale-90 transition-all duration-200 p-2 rounded-lg relative"
+            href="#">
+            <span class="material-symbols-outlined mb-1" data-icon="shopping_cart">shopping_cart</span>
+            <span class="font-label-md text-label-md">Savat</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed bg-primary-fixed dark:bg-primary-container rounded-full px-4 py-1 active:scale-90 transition-all duration-200"
+            href="#">
+            <span class="material-symbols-outlined filled mb-1" data-icon="person">person</span>
+            <span class="font-label-md text-label-md">Profil</span>
+        </a>
+    </nav>
+</body>
+
+</html>

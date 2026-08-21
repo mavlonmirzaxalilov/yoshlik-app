@@ -23,10 +23,26 @@ export interface CartItem {
 
 export type OrderType = "delivery" | "pickup" | "dine_in";
 export type PaymentMethod = "cash" | "online";
+export type OrderStatus = "new" | "accepted" | "preparing" | "ready" | "cancelled";
 
 export interface BotUser {
   telegram_id: number;
-  first_name: string | null;
-  last_name: string | null;
+  full_name: string | null;
   phone: string | null;
+}
+
+export interface OrderItemRow {
+  product_name: string;
+  quantity: number;
+}
+
+export interface Order {
+  id: string;
+  order_number: number;
+  customer_name: string;
+  order_type: OrderType;
+  grand_total: number;
+  status: OrderStatus;
+  created_at: string;
+  order_items: OrderItemRow[];
 }

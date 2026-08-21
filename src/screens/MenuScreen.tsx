@@ -26,7 +26,7 @@ export function MenuScreen({ onOpenCart }: { onOpenCart: () => void }) {
   const loading = categoriesLoading || productsLoading;
 
   return (
-    <div className="pb-28">
+    <div className="pb-40">
       <Header />
       <SearchBar value={search} onChange={setSearch} />
       <CategoryChips

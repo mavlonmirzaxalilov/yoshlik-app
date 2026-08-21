@@ -34,7 +34,7 @@ export async function placeOrder(params: PlaceOrderParams): Promise<PlaceOrderRe
 
   const { data: botUser, error: botUserError } = await supabase
     .from("bot_users")
-    .select("first_name, last_name, phone")
+    .select("full_name, phone")
     .eq("telegram_id", userTelegramId)
     .maybeSingle();
 
@@ -43,11 +43,7 @@ export async function placeOrder(params: PlaceOrderParams): Promise<PlaceOrderRe
   }
 
   if (botUser) {
-    const botFullName = [botUser.first_name, botUser.last_name]
-      .filter(Boolean)
-      .join(" ")
-      .trim();
-    if (botFullName) customerName = botFullName;
+    if (botUser.full_name) customerName = botUser.full_name;
     if (botUser.phone) customerPhone = botUser.phone;
   }
 
