@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:17
+    container_name: yoshlik-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: yoshlik
+      POSTGRES_PASSWORD: yoshlik
+      POSTGRES_DB: yoshlik
+    ports:
+      - "5432:5432"
+    volumes:
+      - yoshlik-db:/var/lib/postgresql/data
+
+volumes:
+  yoshlik-db:

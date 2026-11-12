@@ -1,0 +1,33 @@
+// S1 — minimal model: faqat zakaz kesimi uchun.
+// To'liq model (kategoriyalar, zakaz qatorlari, mijozlar...) S2'da migratsiya bilan qo'shiladi.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Taom {
+  id   Int    @id @default(autoincrement())
+  nom  String
+  narx Int // so'mda
+}
+
+enum OlishUsuli {
+  ZAL
+  OLIB_KETISH
+  YETKAZISH
+}
+
+model Zakaz {
+  id         Int        @id @default(autoincrement())
+  raqam      Int        @unique @default(autoincrement())
+  olishUsuli OlishUsuli
+  olishVaqti String? // "11:20" — zal va olib ketishda
+  tarkib     Json // [{ taomId, nom, narx, soni }]
+  jamiSumma  Int
+  yaratilgan DateTime   @default(now())
+}
