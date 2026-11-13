@@ -41,6 +41,13 @@ Format: `sana · qaror · sabab`
 - 2026-11-13 · Kirishda rozilik katagi majburiy, rozilik vaqti Mijoz.roziVaqti'da saqlanadi · PRD'dagi ochiq savol shu bilan yopildi
 - 2026-11-13 · Zakaz berish uchun kirish majburiy; savatcha localStorage'da saqlanadi va kirgandan keyin tiklanadi · zakaz mijozga bog'lanishi kerak
 - 2026-11-13 · Sessiya: httpOnly cookie, bazada token xeshi, 30 kun; OTP 5 daqiqa, 5 urinish, 60 soniyada bitta kod · oddiy va xavfsiz, tashqi kutubxonasiz
+- 2026-11-13 · Click/Payme kalitlari yo'q — vaqtincha test to'lov sahifasi (`TOLOV_REJIM=test`); provayder `src/lib/tolov.ts` interfeysiga keyin ulanadi · oqim to'liq ishlaydi, productionda test o'chiq
+- 2026-11-13 · Zal va olib ketish faqat oldindan onlayn; yetkazishda onlayn yoki kuryerga naqd · foydalanuvchi qarori; kassa to'lovi savoli yopildi
+- 2026-11-13 · Holatlar: TOLOV_KUTILMOQDA → TOLANDI / QABUL_QILINDI (naqd) → TAYYORLANMOQDA → TAYYOR → YOLDA (yetkazish) → BERILDI; BEKOR · PRD zanjiri + to'lovdan oldingi va naqd holatlari
+- 2026-11-13 · Olish vaqtiga zakaz limiti yo'q; vaqt uchala usulda majburiy, o'tgan vaqt (Toshkent vaqti) rad etiladi · foydalanuvchi qarori
+- 2026-11-13 · Yetkazish narxi = bazaviy + yaxlitlangan km × km narxi, masofa brauzer geolokatsiyasidan to'g'ri chiziq; tarif va kafe nuqtasi vaqtincha test qiymatlar (.env) · foydalanuvchi qarori, haqiqiy raqamlar keyin
+- 2026-11-13 · Promokod foizli, chegirma faqat taomlar summasiga; bekor qilinsa ishlatish qaytariladi · foydalanuvchi qarori
+- 2026-11-13 · Bekor qilishda avval holat shartli o'zgartiriladi, pul keyin qaytariladi; admin faqat keyingi holatga o'tkaza oladi · admin va mijoz bir vaqtda bossa to'qnashuv bo'lmasin
 - 2026-11-13 · Jarayon progress.html orqali kuzatiladi; sahifa hujjatlardan avtomatik yasaladi (`npm run progress`, `npm run dev` oldidan) · qo'lda yuritiladigan sahifa eskiradi, manba — sprint fayllari
 
 ## OCHIQ SAVOLLAR

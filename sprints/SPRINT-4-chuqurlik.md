@@ -6,13 +6,13 @@
 
 ## Tasklar
 
-- [ ] Holatlar zanjiri: to'landi → tayyorlanmoqda → tayyor → yo'lda → yetkazildi/berildi + bekor qilindi; "yo'lda" faqat yetkazishda; noto'g'ri o'tish API'da rad etiladi
-- [ ] Onlayn to'lov integratsiyasi: to'lov o'tgach zakaz avtomatik "to'landi" bo'ladi
-- [ ] Kassa to'lovi va kuryerga naqd varianti (yetkazishda) — to'lov usuli zakazda saqlanadi
-- [ ] Yetkazish narxi: lokatsiyadan km hisoblanadi (bazaviy + har km), maksimal radiusdan uzoq va minimal summadan kam zakaz rad etiladi
-- [ ] Bekor qilish: mijoz "tayyorlanmoqda"gacha bekor qiladi, onlayn to'lov avtomatik qaytariladi
-- [ ] Promokod: savatchada kod kiritiladi, chegirma jami summaga qo'llanadi, noto'g'ri kodda xabar
-- [ ] Chegaraviy holatlar: bo'sh savatcha, "tugadi" taom savatchada, ruxsatsiz holat o'zgartirish
+- [x] Holatlar zanjiri: to'landi → tayyorlanmoqda → tayyor → yo'lda → yetkazildi/berildi + bekor qilindi; "yo'lda" faqat yetkazishda; noto'g'ri o'tish API'da rad etiladi
+- [ ] Onlayn to'lov integratsiyasi: to'lov o'tgach zakaz avtomatik "to'landi" bo'ladi *(test provayder bilan ishlaydi; Click/Payme ulanishi merchant kalitlari kelganda — DECISIONS.md)*
+- [x] Kassa to'lovi va kuryerga naqd varianti (yetkazishda) — to'lov usuli zakazda saqlanadi *(kassa to'lovi olib tashlandi: zal va olib ketish faqat onlayn)*
+- [x] Yetkazish narxi: lokatsiyadan km hisoblanadi (bazaviy + har km), maksimal radiusdan uzoq va minimal summadan kam zakaz rad etiladi
+- [x] Bekor qilish: mijoz "tayyorlanmoqda"gacha bekor qiladi, onlayn to'lov avtomatik qaytariladi
+- [x] Promokod: savatchada kod kiritiladi, chegirma jami summaga qo'llanadi, noto'g'ri kodda xabar
+- [x] Chegaraviy holatlar: bo'sh savatcha, "tugadi" taom savatchada, ruxsatsiz holat o'zgartirish
 
 ## Qabul mezoni
 
@@ -27,10 +27,13 @@ Ochiq savollar bu sprintdan oldin hal qilinadi: kassa to'lovi zakazi qachon tayy
 ## Hisobot
 
 <!-- hisobotchi to'ldiradi -->
+- 2026-11-13: holatlar zanjiri, test to'lov, km bo'yicha yetkazish (geolokatsiya, saqlangan manzil — S3 ochiq mezoni yopildi), bekor qilish va qaytarish, foizli promokod; brauzer va API orqali tekshirildi (src/lib/holatlar.ts, src/lib/tolov.ts, src/lib/yetkazish.ts, src/components/Savatcha.tsx)
 
 ## Handoff
 
-<!-- hisobotchi to'ldiradi -->
+Ochiq: Click/Payme haqiqiy ulanishi (merchant kalitlari kerak); tarif va kafe koordinatasi hozir test qiymatlar (.env).
+Admin sahifasidagi "→ keyingi holat" tugmalari ko'zda ko'rilmadi (panel yashirin edi) — API'si sinalgan.
+Keyingi: S5 — bot + Mini App, Telegram lokatsiyasi, holat xabarlari, to'lanmagan zakazlarni muddatidan keyin yopish.
 
 ---
 

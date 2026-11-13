@@ -10,7 +10,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
   const zakaz = await prisma.zakaz.findUnique({
     where: { id },
-    include: { qatorlar: { orderBy: { id: "asc" } } },
+    include: {
+      qatorlar: { orderBy: { id: "asc" } },
+      tolovlar: { select: { id: true, holat: true }, orderBy: { id: "asc" } },
+    },
   });
   // Boshqa mijozning zakazi borligini ham oshkor qilmaymiz — 404
   if (!zakaz || (!t.f.admin && zakaz.mijozId !== t.f.mijoz.id)) {

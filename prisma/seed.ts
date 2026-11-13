@@ -15,9 +15,15 @@ async function adminlar() {
   if (telefonlar.length) console.log(`${telefonlar.length} ta admin telefoni yozildi.`);
 }
 
+// Lokal test promokodi (haqiqiy promokodlar S6'da admin paneldan yaratiladi).
+async function promokodlar() {
+  await prisma.promokod.upsert({ where: { kod: "TEST10" }, update: {}, create: { kod: "TEST10", foiz: 10 } });
+}
+
 async function main() {
   await adminlar();
   await menyuSeed();
+  await promokodlar();
 }
 
 async function menyuSeed() {

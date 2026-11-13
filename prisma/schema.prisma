@@ -37,17 +37,40 @@ enum OlishUsuli {
   YETKAZISH
 }
 
+// PRD 8-bo'lim. QABUL_QILINDI — naqd yetkazish (to'lanmagan, lekin qabul qilingan).
+enum ZakazHolati {
+  TOLOV_KUTILMOQDA
+  TOLANDI
+  QABUL_QILINDI
+  TAYYORLANMOQDA
+  TAYYOR
+  YOLDA
+  BERILDI
+  BEKOR
+}
+
 model Zakaz {
-  id         Int           @id @default(autoincrement())
-  raqam      Int           @unique @default(autoincrement())
-  olishUsuli OlishUsuli
-  olishVaqti String? // "11:20" — zal va olib ketishda
-  jamiSumma  Int
-  yaratilgan DateTime      @default(now())
-  mijozId    Int?
-  mijoz      Mijoz?        @relation(fields: [mijozId], references: [id])
-  qatorlar   ZakazQatori[]
-  tolovlar   Tolov[]
+  id              Int           @id @default(autoincrement())
+  raqam           Int           @unique @default(autoincrement())
+  holat           ZakazHolati   @default(TOLOV_KUTILMOQDA)
+  olishUsuli      OlishUsuli
+  olishVaqti      String? // "11:20"
+  tolovUsuli      TolovUsuli?
+  taomlarSumma    Int           @default(0)
+  chegirma        Int           @default(0)
+  yetkazishNarxi  Int           @default(0)
+  jamiSumma       Int // taomlarSumma - chegirma + yetkazishNarxi
+  yetkazishManzil String?
+  lat             Float?
+  lng             Float?
+  masofaKm        Float?
+  yaratilgan      DateTime      @default(now())
+  mijozId         Int?
+  mijoz           Mijoz?        @relation(fields: [mijozId], references: [id])
+  promokodId      Int?
+  promokod        Promokod?     @relation(fields: [promokodId], references: [id])
+  qatorlar        ZakazQatori[]
+  tolovlar        Tolov[]
 }
 
 // Zakazdagi har bir taom. nom va narx — zakaz paytidagi nusxa (narx keyin o'zgarsa ham saqlanadi).
@@ -112,22 +135,34 @@ enum TolovUsuli {
   KASSA
 }
 
-model Tolov {
-  id         Int        @id @default(autoincrement())
-  zakazId    Int
-  zakaz      Zakaz      @relation(fields: [zakazId], references: [id])
-  usul       TolovUsuli
-  summa      Int
-  holat      String // S4'da holatlar aniqlanadi
-  yaratilgan DateTime   @default(now())
+enum TolovHolati {
+  KUTILMOQDA
+  TOLANDI
+  BEKOR
+  QAYTARILDI
 }
 
-// Chegirma qoidalari ochiq savol — maydonlar S4'da qo'shiladi.
+model Tolov {
+  id         Int         @id @default(autoincrement())
+  zakazId    Int
+  zakaz      Zakaz       @relation(fields: [zakazId], references: [id])
+  usul       TolovUsuli
+  summa      Int
+  holat      TolovHolati @default(KUTILMOQDA)
+  yaratilgan DateTime    @default(now())
+}
+
+// Foizli chegirma (DECISIONS.md). Chegirma faqat taomlar summasiga.
 model Promokod {
-  id         Int      @id @default(autoincrement())
-  kod        String   @unique
-  faol       Boolean  @default(true)
-  yaratilgan DateTime @default(now())
+  id           Int       @id @default(autoincrement())
+  kod          String    @unique
+  foiz         Int       @default(0)
+  muddati      DateTime?
+  maxIshlatish Int?
+  ishlatildi   Int       @default(0)
+  faol         Boolean   @default(true)
+  yaratilgan   DateTime  @default(now())
+  zakazlar     Zakaz[]
 }
 
 // Admin telefon raqami bo'yicha aniqlanadi (S3); Telegram ID S6'da ishlatiladi.

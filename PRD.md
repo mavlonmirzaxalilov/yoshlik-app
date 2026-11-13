@@ -79,7 +79,11 @@ Oshxona jamoasi (3 oshpaz, 2 yordamchi) va kuryer tizimda rol emas — admin ula
 **To'lov:**
 - Olib ketish — faqat **oldindan onlayn** (Click yoki Payme).
 - Yetkazish — onlayn yoki kuryerga naqd.
-- Zalda — ochiq savol (9-bo'lim).
+- Zalda — faqat **oldindan onlayn** (Click yoki Payme).
+
+**Vaqt:** olish (yetkazish) vaqti uchala usulda tanlanadi; bitta vaqtga zakazlar limiti yo'q.
+
+**Promokod:** foizli chegirma, faqat taomlar summasiga; bekor qilinsa promokod ishlatilishi qaytariladi.
 
 **Kechikish:** mijoz olish vaqtidan kechiksa, oshxona taomni isitib beradi. To'lov oldindan bo'lgani uchun kelmaslik xavfini mijoz ko'taradi.
 
@@ -102,12 +106,9 @@ Oshxona jamoasi (3 oshpaz, 2 yordamchi) va kuryer tizimda rol emas — admin ula
 ## 9. Ochiq savollar
 
 **Mahsulot qarorlari**
-- Bitta olish vaqtiga nechta zakaz qabul qilinadi (vaqt sloti limiti)? — S4
-- Zalda yeyiladigan zakaz ham faqat oldindan onlayn to'lanadimi yoki kassada to'lash qoladimi? — S4
-- Yetkazishda ham olish vaqti tanlanadimi? — S4
-- Uch olish usuli to'qnashsa, qaysi biri ustun? — S4
-- Yetkazish raqamlari: bazaviy narx, km narxi, maksimal radius, minimal summa — S4
-- Promokod qoidalari (foiz yoki summa, muddat, bir martalikmi) — S4
+- Yetkazish raqamlari: bazaviy narx, km narxi, maksimal radius, minimal summa (hozir test qiymatlar) — ishga tushirishdan oldin
+- Kafe koordinatasi (hozir test nuqta) — ishga tushirishdan oldin
+- Click/Payme merchant akkaunti va kalitlari (hozir test to'lov) — ishga tushirishdan oldin
 - Hisobot tarkibi — S6
 - Kuryerlar soni — ishga tushirishdan oldin
 

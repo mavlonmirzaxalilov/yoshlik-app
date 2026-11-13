@@ -1,4 +1,5 @@
 // API va sahifalar o'rtasidagi umumiy turlar.
+import type { ZakazHolati } from "@/lib/holatlar";
 
 export type OlishUsuli = "ZAL" | "OLIB_KETISH" | "YETKAZISH";
 
@@ -8,8 +9,17 @@ export const OLISH_USULLARI: { qiymat: OlishUsuli; nom: string }[] = [
   { qiymat: "YETKAZISH", nom: "Yetkazib berish" },
 ];
 
-// Olish vaqti faqat zal va olib ketishda tanlanadi (PRD, 5-bo'lim).
-export const vaqtKerak = (usul: OlishUsuli) => usul === "ZAL" || usul === "OLIB_KETISH";
+export type TolovUsuli = "CLICK" | "PAYME" | "NAQD" | "KASSA";
+
+// Zal va olib ketish — faqat oldindan onlayn; yetkazishda kuryerga naqd ham mumkin (DECISIONS.md).
+export const tolovUsullari = (usul: OlishUsuli): { qiymat: TolovUsuli; nom: string }[] => [
+  { qiymat: "CLICK", nom: "Click" },
+  { qiymat: "PAYME", nom: "Payme" },
+  ...(usul === "YETKAZISH" ? [{ qiymat: "NAQD" as const, nom: "Kuryerga naqd" }] : []),
+];
+
+export const tolovNomi = (u: TolovUsuli | null) =>
+  ({ CLICK: "Click", PAYME: "Payme", NAQD: "Kuryerga naqd", KASSA: "Kassada" })[u ?? "KASSA"] ?? "—";
 
 export type Kategoriya = { id: number; nom: string; belgi: string; tartib: number };
 
@@ -30,11 +40,19 @@ export type ZakazQatori = { id: number; taomId: number | null; nom: string; narx
 export type Zakaz = {
   id: number;
   raqam: number;
+  holat: ZakazHolati;
   olishUsuli: OlishUsuli;
   olishVaqti: string | null;
+  tolovUsuli: TolovUsuli | null;
   qatorlar: ZakazQatori[];
+  taomlarSumma: number;
+  chegirma: number;
+  yetkazishNarxi: number;
   jamiSumma: number;
+  yetkazishManzil: string | null;
+  masofaKm: number | null;
   yaratilgan: string;
+  tolovlar?: { id: number; holat: "KUTILMOQDA" | "TOLANDI" | "BEKOR" | "QAYTARILDI" }[];
 };
 
 export const somFormat = (summa: number) =>

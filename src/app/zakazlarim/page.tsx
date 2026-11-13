@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { sanaFormat, somFormat, usulNomi, type Zakaz } from "@/lib/turlar";
+import HolatBelgisi from "@/components/HolatBelgisi";
 
 export default function ZakazlarimSahifasi() {
   const router = useRouter();
@@ -39,7 +40,9 @@ export default function ZakazlarimSahifasi() {
           <li key={z.id}>
             <Link href={`/zakaz/${z.id}`} className="block rounded-xl bg-white p-4 shadow-sm hover:bg-stone-50">
               <div className="flex justify-between">
-                <span className="font-semibold">Zakaz #{z.raqam}</span>
+                <span className="flex items-center gap-2 font-semibold">
+                  Zakaz #{z.raqam} <HolatBelgisi holat={z.holat} />
+                </span>
                 <span className="font-semibold">{somFormat(z.jamiSumma)}</span>
               </div>
               <div className="text-sm text-stone-600">

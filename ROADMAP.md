@@ -6,7 +6,7 @@
 |--------|-------|------------------------|
 | ✅ S1 — kesim | Ishlaydimi? | Menyuda 4 ta taom ko'rinadi, savatchaga qo'shiladi, olish usuli va vaqti tanlanadi, zakaz bazaga yoziladi va tasdiq ekrani chiqadi |
 | S2 — xotira | Eslab qoladimi? | Kategoriyalar, taom rasmlari, manzillar, zakaz qatorlari — to'liq model; menyu kategoriya bo'yicha filtrlanadi |
-| S3 — auth | Kim kirdi? | Mijoz telefon orqali kiradi va faqat o'z zakazlarini ko'radi; admin sahifalari himoyalangan |
+| ✅ S3 — auth | Kim kirdi? | Mijoz telefon orqali kiradi va faqat o'z zakazlarini ko'radi; admin sahifalari himoyalangan |
 | S4 — chuqurlik | Haqiqiy hayotda chidaydimi? | Holatlar zanjiri, uch olish usuli, km bo'yicha yetkazish narxi, onlayn to'lov, bekor qilish va pul qaytarish, promokod |
 | S5 — telegram | Qo'lda turadimi? | Bot ichida Mini App ochiladi, telefon "raqamni ulashish" bilan olinadi, holat xabarlari botga keladi |
 | S6 — admin | Boshqarib bo'ladimi? | Admin Telegram orqali panelga kiradi, zakaz holatini o'zgartiradi, menyuni tahrirlaydi, "tugadi" qiladi, hisobotni ko'radi |
