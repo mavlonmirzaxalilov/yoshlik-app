@@ -40,5 +40,12 @@ export type Zakaz = {
 export const somFormat = (summa: number) =>
   `${summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} so'm`;
 
-export const usulNomi = (usul: OlishUsuli) =>
+// "13.11.2026, 11:40" — brauzerlarning uz-UZ formati bir xil emas, shuning uchun qo'lda
+export const sanaFormat = (iso: string) => {
+  const d = new Date(iso);
+  const ikki = (n: number) => String(n).padStart(2, "0");
+  return `${ikki(d.getDate())}.${ikki(d.getMonth() + 1)}.${d.getFullYear()}, ${ikki(d.getHours())}:${ikki(d.getMinutes())}`;
+};
+
+export const usulNomi =(usul: OlishUsuli) =>
   OLISH_USULLARI.find((u) => u.qiymat === usul)?.nom ?? usul;

@@ -36,6 +36,11 @@ Format: `sana · qaror · sabab`
 - 2026-11-13 · Bir qatordagi bir nechta ichimlik (Cola/Fanta/Sprite/Fusetea, choy ko'k/qora, koffe sutli/qora) har biri alohida taom · foydalanuvchi qarori
 - 2026-11-13 · Rasm o'rnida vaqtincha kategoriya belgisi (emoji); rasm yuklash S6 (admin)ga ko'chirildi · faylda rasm yo'q, admin panel va hosting hali yo'q
 - 2026-11-13 · S1 zakazlari migratsiyada Zakaz.tarkib JSON'idan ZakazQatori jadvaliga ko'chirildi · S2 qabul mezoni: eski zakazlar omon qolsin
+- 2026-11-13 · OTP test rejimida: kod server logiga chiqadi, SMS provayder ulanmagan; productionda kod yuborilmaydi (503) · S5'da Telegram "raqamni ulashish"ga o'tiladi
+- 2026-11-13 · Admin telefon raqami bo'yicha aniqlanadi (`.env` ADMIN_TELEFONLAR → Admin jadvali), mijoz bilan bir xil OTP orqali kiradi · Telegram S5'da keladi; S6'da Telegram ID'ga o'tiladi
+- 2026-11-13 · Kirishda rozilik katagi majburiy, rozilik vaqti Mijoz.roziVaqti'da saqlanadi · PRD'dagi ochiq savol shu bilan yopildi
+- 2026-11-13 · Zakaz berish uchun kirish majburiy; savatcha localStorage'da saqlanadi va kirgandan keyin tiklanadi · zakaz mijozga bog'lanishi kerak
+- 2026-11-13 · Sessiya: httpOnly cookie, bazada token xeshi, 30 kun; OTP 5 daqiqa, 5 urinish, 60 soniyada bitta kod · oddiy va xavfsiz, tashqi kutubxonasiz
 - 2026-11-13 · Jarayon progress.html orqali kuzatiladi; sahifa hujjatlardan avtomatik yasaladi (`npm run progress`, `npm run dev` oldidan) · qo'lda yuritiladigan sahifa eskiradi, manba — sprint fayllari
 
 ## OCHIQ SAVOLLAR

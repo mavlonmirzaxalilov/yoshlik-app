@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { talabQil } from "@/lib/auth";
 import { OLISH_USULLARI, vaqtKerak, type OlishUsuli } from "@/lib/turlar";
 
 type SorovQatori = { taomId: number; soni: number };
@@ -8,6 +9,9 @@ const xato = (xabar: string, status = 400) => Response.json({ xato: xabar }, { s
 // POST /api/zakazlar — yangi zakaz yaratish.
 // Narx va jami summa mijoz yuborganidan emas, bazadagi narxdan hisoblanadi.
 export async function POST(request: Request) {
+  const t = await talabQil();
+  if (t.xato) return t.xato;
+
   let body: { qatorlar?: SorovQatori[]; olishUsuli?: OlishUsuli; olishVaqti?: string };
   try {
     body = await request.json();
@@ -40,7 +44,13 @@ export async function POST(request: Request) {
   const jamiSumma = yangiQatorlar.reduce((s, q) => s + q.narx * q.soni, 0);
 
   const zakaz = await prisma.zakaz.create({
-    data: { olishUsuli: usul, olishVaqti, jamiSumma, qatorlar: { create: yangiQatorlar } },
+    data: {
+      olishUsuli: usul,
+      olishVaqti,
+      jamiSumma,
+      mijozId: t.f.mijoz.id,
+      qatorlar: { create: yangiQatorlar },
+    },
   });
 
   return Response.json({ id: zakaz.id, raqam: zakaz.raqam }, { status: 201 });

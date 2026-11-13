@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { OLISH_USULLARI, somFormat, vaqtKerak, type OlishUsuli, type Taom } from "@/lib/turlar";
+import { savatchaniYoz } from "@/lib/sessiyaKlient";
 
 export type SavatchaQatori = { taom: Taom; soni: number };
 
@@ -34,7 +35,15 @@ export default function Savatcha({ qatorlar, soniniOzgartir }: Props) {
         }),
       });
       const data = await javob.json();
+      if (javob.status === 401) {
+        // Savatcha localStorage'da saqlangan — kirgandan keyin menyuga qaytib tiklanadi.
+        // Sahifa holati qaytishda saqlanadi, shuning uchun tugmani qayta faollashtiramiz.
+        setYuborilmoqda(false);
+        router.push("/kirish?qaytish=/");
+        return;
+      }
       if (!javob.ok) throw new Error(data.xato ?? "Zakaz yuborilmadi");
+      savatchaniYoz([]);
       router.push(`/zakaz/${data.id}`);
     } catch (e) {
       setXato(e instanceof Error ? e.message : "Zakaz yuborilmadi");

@@ -3,7 +3,24 @@ import { menyu } from "./menyu";
 
 const prisma = new PrismaClient();
 
+// Adminlar .env'dagi ADMIN_TELEFONLAR (vergul bilan) ro'yxatidan olinadi.
+async function adminlar() {
+  const telefonlar = (process.env.ADMIN_TELEFONLAR ?? "")
+    .split(",")
+    .map((t) => t.replace(/[^\d+]/g, ""))
+    .filter((t) => /^\+998\d{9}$/.test(t));
+  for (const telefon of telefonlar) {
+    await prisma.admin.upsert({ where: { telefon }, update: {}, create: { telefon } });
+  }
+  if (telefonlar.length) console.log(`${telefonlar.length} ta admin telefoni yozildi.`);
+}
+
 async function main() {
+  await adminlar();
+  await menyuSeed();
+}
+
+async function menyuSeed() {
   const kategoriyalarSoni = await prisma.kategoriya.count();
   if (kategoriyalarSoni > 0) {
     console.log(`Bazada allaqachon ${kategoriyalarSoni} ta kategoriya bor — seed o'tkazib yuborildi.`);

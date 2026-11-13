@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { somFormat, usulNomi, type Zakaz } from "@/lib/turlar";
 
 export default function ZakazTasdiq() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
   const [zakaz, setZakaz] = useState<Zakaz | null>(null);
   const [xato, setXato] = useState<string | null>(null);
 
@@ -14,11 +15,15 @@ export default function ZakazTasdiq() {
     fetch(`/api/zakazlar/${id}`)
       .then(async (r) => {
         const data = await r.json();
+        if (r.status === 401) {
+          router.replace(`/kirish?qaytish=/zakaz/${id}`);
+          return;
+        }
         if (!r.ok) throw new Error(data.xato ?? "Zakaz topilmadi");
         setZakaz(data);
       })
       .catch((e: Error) => setXato(e.message));
-  }, [id]);
+  }, [id, router]);
 
   return (
     <main className="mx-auto w-full max-w-2xl px-4 py-6">

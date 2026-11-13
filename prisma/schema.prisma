@@ -67,9 +67,33 @@ model Mijoz {
   telegramId BigInt?   @unique
   ism        String?
   telefon    String?   @unique
+  roziVaqti  DateTime? // telefon va zakazlar saqlanishiga rozilik berilgan vaqt
   yaratilgan DateTime  @default(now())
   manzillar  Manzil[]
   zakazlar   Zakaz[]
+  sessiyalar Sessiya[]
+}
+
+// Bir martalik kirish kodi. Bazada kodning o'zi emas, xeshi saqlanadi.
+model OtpKod {
+  id         Int      @id @default(autoincrement())
+  telefon    String
+  kodHash    String
+  muddati    DateTime
+  urinish    Int      @default(0)
+  ishlatildi Boolean  @default(false)
+  yaratilgan DateTime @default(now())
+
+  @@index([telefon])
+}
+
+// Kirish sessiyasi. id — cookie'dagi tokenning xeshi.
+model Sessiya {
+  id         String   @id
+  mijozId    Int
+  mijoz      Mijoz    @relation(fields: [mijozId], references: [id], onDelete: Cascade)
+  muddati    DateTime
+  yaratilgan DateTime @default(now())
 }
 
 model Manzil {
@@ -106,8 +130,10 @@ model Promokod {
   yaratilgan DateTime @default(now())
 }
 
+// Admin telefon raqami bo'yicha aniqlanadi (S3); Telegram ID S6'da ishlatiladi.
 model Admin {
   id         Int     @id @default(autoincrement())
-  telegramId BigInt  @unique
+  telegramId BigInt? @unique
+  telefon    String? @unique
   ism        String?
 }

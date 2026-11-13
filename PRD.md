@@ -95,6 +95,8 @@ Oshxona jamoasi (3 oshpaz, 2 yordamchi) va kuryer tizimda rol emas — admin ula
 
 **Maxfiy ma'lumot:** telefon, manzil, zakaz tarixi — faqat admin va mijozning o'zi ko'radi.
 
+**Rozilik:** kirishda mijoz "Telefon raqamim va zakazlarim saqlanishiga roziman" katagini belgilaydi; belgilanmasa kod yuborilmaydi.
+
 **Yuridik:** kafe YaTT; Click va Payme bilan shartnoma YaTT nomidan.
 
 ## 9. Ochiq savollar
@@ -114,7 +116,6 @@ Oshxona jamoasi (3 oshpaz, 2 yordamchi) va kuryer tizimda rol emas — admin ula
 - Bot savdosining qancha qismi yangi mijozdan — S4 dan oldin
 - Click/Payme komissiyasi foizi — S4 dan oldin
 - Fiskal chekni v2'ga qoldirish qonuniy jihatdan mumkinmi — S4 dan oldin
-- Telefon va zakaz tarixi uchun mijoz roziligi kerakmi — S3
 - Reklama byudjeti (Instagram, Telegram kanal) va ilmoq — S5 dan oldin
 
 ## 10. V1'ga kirmaydiganlar

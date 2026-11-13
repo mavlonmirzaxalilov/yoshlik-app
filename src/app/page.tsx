@@ -5,6 +5,7 @@ import Savatcha, { type SavatchaQatori } from "@/components/Savatcha";
 import TaomDetali from "@/components/TaomDetali";
 import TaomRasmi from "@/components/TaomRasmi";
 import { somFormat, type Kategoriya, type Taom } from "@/lib/turlar";
+import { savatchaniOqi, savatchaniYoz } from "@/lib/sessiyaKlient";
 
 export default function MenyuSahifasi() {
   const [kategoriyalar, setKategoriyalar] = useState<Kategoriya[]>([]);
@@ -13,6 +14,29 @@ export default function MenyuSahifasi() {
   const [xato, setXato] = useState<string | null>(null);
   const [savatcha, setSavatcha] = useState<SavatchaQatori[]>([]);
   const [ochiqTaom, setOchiqTaom] = useState<number | null>(null);
+  const [tiklandi, setTiklandi] = useState(false);
+
+  // Savatcha localStorage'dan tiklanadi (masalan, kirish sahifasidan qaytganda)
+  useEffect(() => {
+    const saqlangan = savatchaniOqi();
+    const tiklash = saqlangan.length
+      ? fetch("/api/taomlar")
+          .then((r) => (r.ok ? r.json() : []))
+          .then((hammasi: Taom[]) => {
+            setSavatcha(
+              saqlangan.flatMap((q) => {
+                const taom = hammasi.find((t) => t.id === q.taomId && !t.tugadi);
+                return taom ? [{ taom, soni: q.soni }] : [];
+              }),
+            );
+          })
+      : Promise.resolve();
+    tiklash.finally(() => setTiklandi(true));
+  }, []);
+
+  useEffect(() => {
+    if (tiklandi) savatchaniYoz(savatcha.map((q) => ({ taomId: q.taom.id, soni: q.soni })));
+  }, [savatcha, tiklandi]);
 
   useEffect(() => {
     fetch("/api/kategoriyalar")
