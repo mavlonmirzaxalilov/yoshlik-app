@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yoshlik — jarayon</title>
+<style>
+  :root {
+    --fon: #f5f5f4; --karta: #ffffff; --matn: #1c1917; --xira: #78716c; --chegara: #e7e5e4;
+    --yashil: #059669; --yashil-fon: #ecfdf5; --sariq: #b45309; --sariq-fon: #fffbeb;
+    --kulrang-fon: #f5f5f4; --kod: #f5f5f4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fon: #0c0a09; --karta: #1c1917; --matn: #f5f5f4; --xira: #a8a29e; --chegara: #292524;
+      --yashil: #34d399; --yashil-fon: #052e22; --sariq: #fbbf24; --sariq-fon: #2a1d05;
+      --kulrang-fon: #292524; --kod: #292524;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fon); color: var(--matn);
+    font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; }
+  header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; align-items: end; margin-bottom: 24px; }
+  h1 { margin: 0; font-size: 28px; letter-spacing: -0.02em; }
+  h2 { font-size: 18px; margin: 36px 0 12px; }
+  h3 { margin: 6px 0 2px; font-size: 16px; }
+  .xira, .savol, .son, .izoh { color: var(--xira); }
+  .savol { margin: 0 0 12px; font-size: 14px; }
+  .son { margin: 6px 0 0; font-size: 13px; }
+  .izoh { font-size: 13px; }
+  code { background: var(--kod); padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+  .karta { background: var(--karta); border: 1px solid var(--chegara); border-radius: 14px; padding: 18px; }
+  .umumiy { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .raqam { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+  .chiziq { height: 8px; background: var(--kulrang-fon); border-radius: 99px; overflow: hidden; }
+  .chiziq span { display: block; height: 100%; background: var(--yashil); border-radius: 99px; }
+  .bosqichlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .bosqich { display: flex; gap: 12px; align-items: center; }
+  .doira { width: 30px; height: 30px; flex: none; border-radius: 50%; display: grid; place-items: center;
+    font-weight: 700; background: var(--kulrang-fon); color: var(--xira); }
+  .doira.tugadi { background: var(--yashil-fon); color: var(--yashil); }
+  .sprintlar { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .sprint { background: var(--karta); border: 1px solid var(--chegara); border-radius: 14px; padding: 16px; }
+  .sprint.jarayonda, .sprint.navbatda { border-color: var(--sariq); box-shadow: 0 0 0 1px var(--sariq); }
+  .sprint-bosh { display: flex; justify-content: space-between; align-items: center; }
+  .sprint-raqam { font-weight: 700; color: var(--xira); }
+  .belgi { font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 99px; background: var(--kulrang-fon); color: var(--xira); }
+  .belgi.tugadi { background: var(--yashil-fon); color: var(--yashil); }
+  .belgi.jarayonda, .belgi.navbatda { background: var(--sariq-fon); color: var(--sariq); }
+  ul.tasklar { list-style: none; padding: 0; margin: 0; }
+  ul.tasklar li { display: flex; gap: 10px; padding: 8px 0; border-top: 1px solid var(--chegara); }
+  ul.tasklar li:first-child { border-top: 0; }
+  .katak { width: 20px; height: 20px; flex: none; margin-top: 2px; border: 2px solid var(--chegara); border-radius: 6px;
+    display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+  li.bajarildi .katak { background: var(--yashil); border-color: var(--yashil); color: var(--karta); }
+  li.bajarildi > span:last-child { color: var(--xira); }
+  li.kochirildi .katak { color: var(--sariq); border-color: var(--sariq); }
+  .ikki { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+  .royxat { margin: 0; padding-left: 18px; }
+  .royxat li { margin: 6px 0; }
+  .muddat { display: inline-block; font-size: 12px; color: var(--sariq); background: var(--sariq-fon);
+    padding: 0 8px; border-radius: 99px; margin-left: 4px; white-space: nowrap; }
+  .guruh { font-weight: 600; margin: 14px 0 4px; }
+  .guruh:first-child { margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td { padding: 8px 6px; border-top: 1px solid var(--chegara); vertical-align: top; }
+  tr:first-child td { border-top: 0; }
+  td.sana { color: var(--xira); white-space: nowrap; width: 1%; }
+  .jadval { overflow-x: auto; }
+  footer { margin-top: 40px; color: var(--xira); font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <p class="xira" style="margin:0">Loyiha jarayoni</p>
+      <h1>Yoshlik — onlayn zakaz</h1>
+    </div>
+    <p class="xira" style="margin:0">Yangilangan: 13-noy, 2026, 10:53</p>
+  </header>
+
+  <section class="umumiy" aria-label="Umumiy holat">
+    <div class="karta">
+      <div class="xira">Umumiy progress</div>
+      <div class="raqam">31%</div>
+      <div class="chiziq"><span style="width:31%"></span></div>
+      <div class="son">12/39 task</div>
+    </div>
+    <div class="karta"><div class="xira">Sprintlar</div><div class="raqam">2/6</div><div class="son">tugadi</div></div>
+    <div class="karta"><div class="xira">Joriy sprint</div><div class="raqam">S3</div><div class="son">auth</div></div>
+    <div class="karta"><div class="xira">Ochiq savollar</div><div class="raqam">14</div><div class="son">PRD, 9-bo'lim</div></div>
+  </section>
+
+  <h2>Tayyorgarlik</h2>
+  <section class="karta bosqichlar">
+    <div class="bosqich"><span class="doira tugadi">✓</span>
+        <div><strong>Charxla</strong><div class="xira" style="font-size:13px">G'oya bir jumlada</div></div></div><div class="bosqich"><span class="doira tugadi">✓</span>
+        <div><strong>Qovurdoq</strong><div class="xira" style="font-size:13px">5 blok savol</div></div></div><div class="bosqich"><span class="doira tugadi">✓</span>
+        <div><strong>PRDla</strong><div class="xira" style="font-size:13px">Hujjatlar paketi</div></div></div><div class="bosqich"><span class="doira tugadi">✓</span>
+        <div><strong>Savala</strong><div class="xira" style="font-size:13px">Qaror: SHARTLI GO</div></div></div>
+  </section>
+
+  <h2>Sprintlar</h2>
+  <section class="sprintlar">
+  <article class="sprint tugadi">
+    <div class="sprint-bosh">
+      <span class="sprint-raqam">S1</span>
+      <span class="belgi tugadi">Tugadi</span>
+    </div>
+    <h3>kesim</h3>
+    <p class="savol">Ishlaydimi?</p>
+    <div class="chiziq" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"><span style="width:100%"></span></div>
+    <p class="son">7/7 task</p>
+  </article>
+  <article class="sprint tugadi">
+    <div class="sprint-bosh">
+      <span class="sprint-raqam">S2</span>
+      <span class="belgi tugadi">Tugadi</span>
+    </div>
+    <h3>xotira</h3>
+    <p class="savol">Eslab qoladimi?</p>
+    <div class="chiziq" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"><span style="width:100%"></span></div>
+    <p class="son">5/5 task · 1 ta ko'chirilgan</p>
+  </article>
+  <article class="sprint navbatda">
+    <div class="sprint-bosh">
+      <span class="sprint-raqam">S3</span>
+      <span class="belgi navbatda">Navbatda</span>
+    </div>
+    <h3>auth</h3>
+    <p class="savol">Kim kirdi?</p>
+    <div class="chiziq" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span style="width:0%"></span></div>
+    <p class="son">0/6 task</p>
+  </article>
+  <article class="sprint kutilmoqda">
+    <div class="sprint-bosh">
+      <span class="sprint-raqam">S4</span>
+      <span class="belgi kutilmoqda">Kutilmoqda</span>
+    </div>
+    <h3>chuqurlik</h3>
+    <p class="savol">Haqiqiy hayotda chidaydimi?</p>
+    <div class="chiziq" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span style="width:0%"></span></div>
+    <p class="son">0/7 task</p>
+  </article>
+  <article class="sprint kutilmoqda">
+    <div class="sprint-bosh">
+      <span class="sprint-raqam">S5</span>
+      <span class="belgi kutilmoqda">Kutilmoqda</span>
+    </div>
+    <h3>telegram</h3>
+    <p class="savol">Qo'lda turadimi?</p>
+    <div class="chiziq" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span style="width:0%"></span></div>
+    <p class="son">0/6 task</p>
+  </article>
+  <article class="sprint kutilmoqda">
+    <div class="sprint-bosh">
+      <span class="sprint-raqam">S6</span>
+      <span class="belgi kutilmoqda">Kutilmoqda</span>
+    </div>
+    <h3>admin</h3>
+    <p class="savol">Boshqarib bo'ladimi?</p>
+    <div class="chiziq" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span style="width:0%"></span></div>
+    <p class="son">0/8 task</p>
+  </article></section>
+
+  <h2>Joriy sprint: S3 — auth</h2>
+  <section class="ikki">
+    <div class="karta">
+      <p style="margin-top:0">Mijoz telefon orqali kirsin va faqat o'z zakazlarini ko'rsin; admin sahifalari himoyalansin.</p>
+      <ul class="tasklar"><li class="">
+        <span class="katak" aria-hidden="true"></span>
+        <span>Telefon + bir martalik kod (OTP) bilan kirish: <code>POST /api/auth/kod</code>, <code>POST /api/auth/tekshir</code></span></li><li class="">
+        <span class="katak" aria-hidden="true"></span>
+        <span>Sessiya saqlanadi — sahifa yangilansa ham mijoz tizimda qoladi</span></li><li class="">
+        <span class="katak" aria-hidden="true"></span>
+        <span>Zakaz kirgan mijozga bog'lanadi; &quot;Mening zakazlarim&quot; sahifasida faqat o'z zakazlari tarixi</span></li><li class="">
+        <span class="katak" aria-hidden="true"></span>
+        <span>Profil: ism, telefon va saqlangan manzillar (qo'shish/o'chirish)</span></li><li class="">
+        <span class="katak" aria-hidden="true"></span>
+        <span>Rollar: mijoz va admin; <code>/admin/...</code> sahifalari va admin API yo'llari faqat admin uchun</span></li><li class="">
+        <span class="katak" aria-hidden="true"></span>
+        <span>Ruxsatsiz kirishga urinish — kirish sahifasiga yo'naltirish</span></li></ul>
+    </div>
+    <div class="karta">
+      <strong>Handoff</strong>
+      <p class="xira">Hali yozilmagan.</p>
+    </div>
+  </section>
+
+  <details class="karta" style="margin-top:12px"><summary><strong>S1 — kesim</strong> · hisobot va tasklar</summary>
+      <ul class="tasklar" style="margin-top:12px"><li class="bajarildi">
+        <span class="katak" aria-hidden="true">✓</span>
+        <span>Taomlar jadvali (minimal: nom, narx) va 4 ta seed taom — lokal PostgreSQL, Prisma</span></li><li class="bajarildi">
+        <span class="katak" aria-hidden="true">✓</span>
+        <span>Menyu sahifasi: <code>GET /api/taomlar</code> dan 4 ta taom ro'yxati chiqadi</span></li><li class="bajarildi">
+        <span class="katak" aria-hidden="true">✓</span>
+        <span>Taom kartasi va &quot;Savatchaga qo'shish&quot; tugmasi — savatcha brauzer holatida, soni va jami summa ko'rinadi</span></li><li class="bajarildi">
+        <span class="katak" aria-hidden="true">✓</span>
+        <span>Olish usuli tanlovi: zalda / olib ketish / yetkazish (tekshiruvsiz)</span></li><li class="bajarildi">
+        <span class="katak" aria-hidden="true">✓</span>
+        <span>Olish vaqti tanlovi (zal va olib ketishda), tekshiruvsiz</span></li><li class="bajarildi">
+        <span class="katak" aria-hidden="true">✓</span>
+        <span>Zakaz yaratish API yo'li: <code>POST /api/zakazlar</code> — taomlar, soni, olish usuli va vaqtini bazaga yozadi</span></li><li class="bajarildi">
+        <span class="katak" aria-hidden="true">✓</span>
+        <span>Tasdiq ekrani: &quot;Zakaz #N qabul qilindi&quot;, olish vaqti va zakaz tarkibi</span></li></ul>
+      <p class="xira" style="margin-bottom:0">- 2026-11-12: S1 kesimi tayyor — menyu, savatcha, olish usuli va vaqti, zakaz API va tasdiq ekrani; qabul mezoni brauzerda tekshirildi (src/app/page.tsx, src/components/Savatcha.tsx, src/app/api/zakazlar/route.ts, prisma/schema.prisma)</p>
+      <p style="margin-bottom:0"><strong>Handoff:</strong> Keyingi: S2 — to'liq model migratsiyasi; zakaz tarkibi JSON'dan Zakaz qatorlari jadvaliga ko'chiriladi. Ishga tushirish: <code>npm run db:up</code>, <code>npm run db:migrate</code>, <code>npm run db:seed</code>, <code>npm run dev</code>.</p></details><details class="karta" style="margin-top:12px"><summary><strong>S2 — xotira</strong> · hisobot va tasklar</summary>
+      <ul class="tasklar" style="margin-top:12px"><li class="bajarildi">
+        <span class="katak" aria-hidden="true">✓</span>
+        <span>Modelni migratsiya bilan kengaytirish: Kategoriyalar, Mijozlar, Manzillar, Zakaz qatorlari, To'lovlar, Promokodlar, Adminlar — S1'dagi zakazlar omon qoladi</span></li><li class="bajarildi">
+        <span class="katak" aria-hidden="true">✓</span>
+        <span>Taomga tavsif, hajm, rasm va &quot;tugadi&quot; maydonlari qo'shiladi</span></li><li class="kochirildi">
+        <span class="katak" aria-hidden="true">→</span>
+        <span>Taom rasmini yuklash va saqlash — menyu kartasida rasm ko'rinadi <span class="izoh">(S2'da: <code>rasm</code> maydoni va ko'rsatish, rasm yo'q bo'lsa kategoriya belgisi; yuklash S6'ga ko'chirildi — DECISIONS.md)</span></span></li><li class="bajarildi">
+        <span class="katak" aria-hidden="true">✓</span>
+        <span>Menyu kategoriyalar bo'yicha guruhlanadi va filtrlanadi: <code>GET /api/taomlar?kategoriya=...</code></span></li><li class="bajarildi">
+        <span class="katak" aria-hidden="true">✓</span>
+        <span>Taom detali: tavsif va hajm ko'rinadi</span></li><li class="bajarildi">
+        <span class="katak" aria-hidden="true">✓</span>
+        <span>Zakaz endi zakaz qatorlari orqali saqlanadi (taom, soni, o'sha paytdagi narx)</span></li></ul>
+      <p class="xira" style="margin-bottom:0">- 2026-11-13: to'liq model va migratsiya (S1 zakazlari ZakazQatori'ga ko'chdi), docx'dan haqiqiy menyu — 6 kategoriya, 82 taom, kategoriya filtri va detal oynasi; rasm o'rnida belgi (prisma/schema.prisma, prisma/menyu.ts, src/app/page.tsx, src/components/TaomDetali.tsx)<br>- 2026-11-13: jarayon sahifasi — hujjatlar va git'dan progress.html yasaladi, <code>npm run progress</code> (scripts/progress.mjs)</p>
+      <p style="margin-bottom:0"><strong>Handoff:</strong> Keyingi: S3 — telefon + OTP bilan kirish, sessiya va &quot;Mening zakazlarim&quot;; Mijoz jadvali tayyor. Ochiq: taom nomlaridagi ehtimoliy xatolar (Mannoye kasha, Rassolni, Gurunch, Garox pyuresi) foydalanuvchi tasdig'ini kutmoqda. Rasm yuklash S6'ga ko'chirilgan; savatchani ekran pastiga mahkamlash S5'da ko'riladi.</p></details>
+
+  <section class="ikki" style="margin-top:36px">
+    <div class="karta">
+      <h2 style="margin-top:0">Ochiq savollar</h2>
+      <div class="guruh">Mahsulot qarorlari</div><ul class="royxat"><li>Bitta olish vaqtiga nechta zakaz qabul qilinadi (vaqt sloti limiti)?<span class="muddat">S4</span></li><li>Zalda yeyiladigan zakaz ham faqat oldindan onlayn to'lanadimi yoki kassada to'lash qoladimi?<span class="muddat">S4</span></li><li>Yetkazishda ham olish vaqti tanlanadimi?<span class="muddat">S4</span></li><li>Uch olish usuli to'qnashsa, qaysi biri ustun?<span class="muddat">S4</span></li><li>Yetkazish raqamlari: bazaviy narx, km narxi, maksimal radius, minimal summa<span class="muddat">S4</span></li><li>Promokod qoidalari (foiz yoki summa, muddat, bir martalikmi)<span class="muddat">S4</span></li><li>Hisobot tarkibi<span class="muddat">S6</span></li><li>Kuryerlar soni<span class="muddat">ishga tushirishdan oldin</span></li></ul><div class="guruh">Tekshiriladigan faktlar</div><ul class="royxat"><li>11:20 navbati necha daqiqa va necha kishi ketib qoladi<span class="muddat">S1 bilan parallel, 5 kun kuzatuv</span></li><li>Bot savdosining qancha qismi yangi mijozdan<span class="muddat">S4 dan oldin</span></li><li>Click/Payme komissiyasi foizi<span class="muddat">S4 dan oldin</span></li><li>Fiskal chekni v2'ga qoldirish qonuniy jihatdan mumkinmi<span class="muddat">S4 dan oldin</span></li><li>Telefon va zakaz tarixi uchun mijoz roziligi kerakmi<span class="muddat">S3</span></li><li>Reklama byudjeti (Instagram, Telegram kanal) va ilmoq<span class="muddat">S5 dan oldin</span></li></ul>
+    </div>
+    <div class="karta">
+      <h2 style="margin-top:0">Savala: SHARTLI GO</h2>
+      <ol class="royxat"><li>&quot;Olish vaqti&quot; funksiyasini va oldindan onlayn to'lovni PRD'ga kiritish, &quot;avtomatik qabul&quot; qoidasi bilan kelishtirish, bitta vaqtga zakazlar limitini belgilash.</li><li><s>Kechikish va zakaz olinmay qolishi uchun qoida</s> — yopildi: oldindan to'lov + isitib berish.</li><li>11:20 cho'qqisini bir hafta o'lchash va reklama byudjeti hamda ilmog'ini aniqlash.</li></ol>
+    </div>
+  </section>
+
+  <h2>So'nggi qarorlar</h2>
+  <section class="karta jadval"><table><tr><td class="sana">2026-11-13</td><td><strong>Jarayon progress.html orqali kuzatiladi; sahifa hujjatlardan avtomatik yasaladi (<code>npm run progress</code>, <code>npm run dev</code> oldidan)</strong><div class="xira">qo'lda yuritiladigan sahifa eskiradi, manba — sprint fayllari</div></td></tr><tr><td class="sana">2026-11-13</td><td><strong>S1 zakazlari migratsiyada Zakaz.tarkib JSON'idan ZakazQatori jadvaliga ko'chirildi</strong><div class="xira">S2 qabul mezoni: eski zakazlar omon qolsin</div></td></tr><tr><td class="sana">2026-11-13</td><td><strong>Rasm o'rnida vaqtincha kategoriya belgisi (emoji); rasm yuklash S6 (admin)ga ko'chirildi</strong><div class="xira">faylda rasm yo'q, admin panel va hosting hali yo'q</div></td></tr><tr><td class="sana">2026-11-13</td><td><strong>Bir qatordagi bir nechta ichimlik (Cola/Fanta/Sprite/Fusetea, choy ko'k/qora, koffe sutli/qora) har biri alohida taom</strong><div class="xira">foydalanuvchi qarori</div></td></tr><tr><td class="sana">2026-11-13</td><td><strong>Ikki o'lchamli taom ikki alohida taom sifatida saqlanadi (&quot;Osh (0,75 pors)&quot;, &quot;Osh (1 pors)&quot;)</strong><div class="xira">foydalanuvchi qarori; model variantlarsiz sodda qoladi</div></td></tr><tr><td class="sana">2026-11-13</td><td><strong>Menyu &quot;menu (2).docx&quot; faylidan olindi (6 kategoriya, 82 taom), taom nomlari fayldagidek</strong><div class="xira">kafening haqiqiy menyusi</div></td></tr><tr><td class="sana">2026-11-12</td><td><strong>S1'da zakaz tarkibi Zakaz jadvalida JSON sifatida, narx serverda bazadan hisoblanadi</strong><div class="xira">kesim uchun minimal model; alohida jadval S2'da</div></td></tr><tr><td class="sana">2026-11-12</td><td><strong>Lokal PostgreSQL 17 Docker'da (docker-compose.yml), Prisma 6</strong><div class="xira">kompyuterda Postgres yo'q, Docker bor; Prisma 6 sozlashi oddiyroq</div></td></tr></table></section>
+
+  <h2>Commitlar</h2>
+  <section class="karta jadval"><table><tr><td class="sana">2026-11-13</td><td><code>89bf23c</code> S2: to'liq model va kafening haqiqiy menyusi</td></tr><tr><td class="sana">2026-11-12</td><td><code>9f4dfe3</code> S1: zakaz kesimi — menyu, savatcha, olish vaqti va tasdiq</td></tr></table></section>
+
+  <footer>Bu sahifa <code>npm run progress</code> bilan hujjatlardan avtomatik yasaladi — qo'lda tahrirlamang.</footer>
+</main>
+</body>
+</html>

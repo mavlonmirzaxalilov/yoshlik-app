@@ -24,6 +24,7 @@
 
 <!-- hisobotchi to'ldiradi -->
 - 2026-11-13: to'liq model va migratsiya (S1 zakazlari ZakazQatori'ga ko'chdi), docx'dan haqiqiy menyu — 6 kategoriya, 82 taom, kategoriya filtri va detal oynasi; rasm o'rnida belgi (prisma/schema.prisma, prisma/menyu.ts, src/app/page.tsx, src/components/TaomDetali.tsx)
+- 2026-11-13: jarayon sahifasi — hujjatlar va git'dan progress.html yasaladi, `npm run progress` (scripts/progress.mjs)
 
 ## Handoff
 

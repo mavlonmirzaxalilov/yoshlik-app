@@ -36,6 +36,7 @@ Format: `sana · qaror · sabab`
 - 2026-11-13 · Bir qatordagi bir nechta ichimlik (Cola/Fanta/Sprite/Fusetea, choy ko'k/qora, koffe sutli/qora) har biri alohida taom · foydalanuvchi qarori
 - 2026-11-13 · Rasm o'rnida vaqtincha kategoriya belgisi (emoji); rasm yuklash S6 (admin)ga ko'chirildi · faylda rasm yo'q, admin panel va hosting hali yo'q
 - 2026-11-13 · S1 zakazlari migratsiyada Zakaz.tarkib JSON'idan ZakazQatori jadvaliga ko'chirildi · S2 qabul mezoni: eski zakazlar omon qolsin
+- 2026-11-13 · Jarayon progress.html orqali kuzatiladi; sahifa hujjatlardan avtomatik yasaladi (`npm run progress`, `npm run dev` oldidan) · qo'lda yuritiladigan sahifa eskiradi, manba — sprint fayllari
 
 ## OCHIQ SAVOLLAR
 

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "progress": "node scripts/progress.mjs",
+    "predev": "node scripts/progress.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
