@@ -10,6 +10,7 @@
 - [ ] Zakazlar oqimi: yangi zakazlar ro'yxati, holat va olish usuli bo'yicha filtr, raqam/telefon bo'yicha qidiruv
 - [ ] Zakaz holatini bir bosishda keyingisiga o'tkazish; shikoyat uchun qo'lda bekor qilish
 - [ ] Menyu boshqaruvi: kategoriya va taom qo'shish/tahrirlash (nom, narx, rasm, tavsif, hajm)
+- [ ] Taom rasmini yuklash va saqlash (S2'dan ko'chirilgan) — menyu kartasida belgi o'rniga rasm ko'rinadi
 - [ ] "Tugadi" tugmasi — taom menyuda "mavjud emas" bo'ladi va savatchaga qo'shilmaydi
 - [ ] Hisobot: kunlik zakazlar soni va savdo summasi, olish usullari bo'yicha
 - [ ] Promokod yaratish va o'chirish

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { OLISH_USULLARI, vaqtKerak, type OlishUsuli, type TarkibQatori } from "@/lib/turlar";
+import { OLISH_USULLARI, vaqtKerak, type OlishUsuli } from "@/lib/turlar";
 
 type SorovQatori = { taomId: number; soni: number };
 
@@ -30,16 +30,17 @@ export async function POST(request: Request) {
     where: { id: { in: qatorlar.map((q) => q.taomId) } },
   });
 
-  const tarkib: TarkibQatori[] = [];
+  const yangiQatorlar = [];
   for (const q of qatorlar) {
     const taom = taomlar.find((t) => t.id === q.taomId);
     if (!taom) return xato(`Taom topilmadi: ${q.taomId}`);
-    tarkib.push({ taomId: taom.id, nom: taom.nom, narx: taom.narx, soni: q.soni });
+    if (taom.tugadi) return xato(`"${taom.nom}" tugadi — savatchadan olib tashlang`);
+    yangiQatorlar.push({ taomId: taom.id, nom: taom.nom, narx: taom.narx, soni: q.soni });
   }
-  const jamiSumma = tarkib.reduce((s, q) => s + q.narx * q.soni, 0);
+  const jamiSumma = yangiQatorlar.reduce((s, q) => s + q.narx * q.soni, 0);
 
   const zakaz = await prisma.zakaz.create({
-    data: { olishUsuli: usul, olishVaqti, tarkib, jamiSumma },
+    data: { olishUsuli: usul, olishVaqti, jamiSumma, qatorlar: { create: yangiQatorlar } },
   });
 
   return Response.json({ id: zakaz.id, raqam: zakaz.raqam }, { status: 201 });

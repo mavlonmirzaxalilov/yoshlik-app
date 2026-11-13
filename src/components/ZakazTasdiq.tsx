@@ -42,8 +42,8 @@ export default function ZakazTasdiq() {
           </dl>
 
           <ul className="mt-5 divide-y divide-stone-100 border-t border-stone-200">
-            {zakaz.tarkib.map((q) => (
-              <li key={q.taomId} className="flex justify-between py-2">
+            {zakaz.qatorlar.map((q) => (
+              <li key={q.id} className="flex justify-between py-2">
                 <span>
                   {q.nom} × {q.soni}
                 </span>

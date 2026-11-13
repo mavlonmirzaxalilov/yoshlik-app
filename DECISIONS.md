@@ -31,6 +31,11 @@ Format: `sana · qaror · sabab`
 - 2026-11-12 · PRD yakunlandi, S1 boshlanadi · savala SHARTLI GO, qolgan ochiq savollar S4 dan oldin hal qilinadi
 - 2026-11-12 · Lokal PostgreSQL 17 Docker'da (docker-compose.yml), Prisma 6 · kompyuterda Postgres yo'q, Docker bor; Prisma 6 sozlashi oddiyroq
 - 2026-11-12 · S1'da zakaz tarkibi Zakaz jadvalida JSON sifatida, narx serverda bazadan hisoblanadi · kesim uchun minimal model; alohida jadval S2'da
+- 2026-11-13 · Menyu "menu (2).docx" faylidan olindi (6 kategoriya, 82 taom), taom nomlari fayldagidek · kafening haqiqiy menyusi
+- 2026-11-13 · Ikki o'lchamli taom ikki alohida taom sifatida saqlanadi ("Osh (0,75 pors)", "Osh (1 pors)") · foydalanuvchi qarori; model variantlarsiz sodda qoladi
+- 2026-11-13 · Bir qatordagi bir nechta ichimlik (Cola/Fanta/Sprite/Fusetea, choy ko'k/qora, koffe sutli/qora) har biri alohida taom · foydalanuvchi qarori
+- 2026-11-13 · Rasm o'rnida vaqtincha kategoriya belgisi (emoji); rasm yuklash S6 (admin)ga ko'chirildi · faylda rasm yo'q, admin panel va hosting hali yo'q
+- 2026-11-13 · S1 zakazlari migratsiyada Zakaz.tarkib JSON'idan ZakazQatori jadvaliga ko'chirildi · S2 qabul mezoni: eski zakazlar omon qolsin
 
 ## OCHIQ SAVOLLAR
 

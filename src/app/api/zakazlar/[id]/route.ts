@@ -6,7 +6,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   if (!Number.isInteger(id)) {
     return Response.json({ xato: "Zakaz raqami noto'g'ri" }, { status: 400 });
   }
-  const zakaz = await prisma.zakaz.findUnique({ where: { id } });
+  const zakaz = await prisma.zakaz.findUnique({
+    where: { id },
+    include: { qatorlar: { orderBy: { id: "asc" } } },
+  });
   if (!zakaz) return Response.json({ xato: "Zakaz topilmadi" }, { status: 404 });
   return Response.json(zakaz);
 }

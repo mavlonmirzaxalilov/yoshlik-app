@@ -11,16 +11,28 @@ export const OLISH_USULLARI: { qiymat: OlishUsuli; nom: string }[] = [
 // Olish vaqti faqat zal va olib ketishda tanlanadi (PRD, 5-bo'lim).
 export const vaqtKerak = (usul: OlishUsuli) => usul === "ZAL" || usul === "OLIB_KETISH";
 
-export type Taom = { id: number; nom: string; narx: number };
+export type Kategoriya = { id: number; nom: string; belgi: string; tartib: number };
 
-export type TarkibQatori = { taomId: number; nom: string; narx: number; soni: number };
+export type Taom = {
+  id: number;
+  nom: string;
+  narx: number;
+  hajm: string | null;
+  tavsif: string | null;
+  rasm: string | null;
+  tugadi: boolean;
+  kategoriyaId: number | null;
+  kategoriya: Pick<Kategoriya, "id" | "nom" | "belgi"> | null;
+};
+
+export type ZakazQatori = { id: number; taomId: number | null; nom: string; narx: number; soni: number };
 
 export type Zakaz = {
   id: number;
   raqam: number;
   olishUsuli: OlishUsuli;
   olishVaqti: string | null;
-  tarkib: TarkibQatori[];
+  qatorlar: ZakazQatori[];
   jamiSumma: number;
   yaratilgan: string;
 };

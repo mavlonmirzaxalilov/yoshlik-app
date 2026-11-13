@@ -1,5 +1,4 @@
-// S1 — minimal model: faqat zakaz kesimi uchun.
-// To'liq model (kategoriyalar, zakaz qatorlari, mijozlar...) S2'da migratsiya bilan qo'shiladi.
+// S2 — to'liq ma'lumot modeli (PRD, 7-bo'lim).
 
 generator client {
   provider = "prisma-client-js"
@@ -10,10 +9,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Kategoriya {
+  id      Int    @id @default(autoincrement())
+  nom     String
+  belgi   String // emoji — rasm bo'lmaganda taom kartasida ko'rinadi
+  tartib  Int    @default(0)
+  taomlar Taom[]
+}
+
 model Taom {
-  id   Int    @id @default(autoincrement())
-  nom  String
-  narx Int // so'mda
+  id           Int           @id @default(autoincrement())
+  nom          String
+  narx         Int // so'mda
+  hajm         String? // "1 pors", "0,5 l"
+  tavsif       String?
+  rasm         String? // rasm URL'i; yuklash S6 (admin)da
+  tugadi       Boolean       @default(false)
+  tartib       Int           @default(0)
+  kategoriyaId Int?
+  kategoriya   Kategoriya?   @relation(fields: [kategoriyaId], references: [id])
+  qatorlar     ZakazQatori[]
 }
 
 enum OlishUsuli {
@@ -23,11 +38,76 @@ enum OlishUsuli {
 }
 
 model Zakaz {
-  id         Int        @id @default(autoincrement())
-  raqam      Int        @unique @default(autoincrement())
+  id         Int           @id @default(autoincrement())
+  raqam      Int           @unique @default(autoincrement())
   olishUsuli OlishUsuli
   olishVaqti String? // "11:20" — zal va olib ketishda
-  tarkib     Json // [{ taomId, nom, narx, soni }]
   jamiSumma  Int
+  yaratilgan DateTime      @default(now())
+  mijozId    Int?
+  mijoz      Mijoz?        @relation(fields: [mijozId], references: [id])
+  qatorlar   ZakazQatori[]
+  tolovlar   Tolov[]
+}
+
+// Zakazdagi har bir taom. nom va narx — zakaz paytidagi nusxa (narx keyin o'zgarsa ham saqlanadi).
+model ZakazQatori {
+  id      Int    @id @default(autoincrement())
+  zakazId Int
+  zakaz   Zakaz  @relation(fields: [zakazId], references: [id], onDelete: Cascade)
+  taomId  Int?
+  taom    Taom?  @relation(fields: [taomId], references: [id], onDelete: SetNull)
+  nom     String
+  narx    Int
+  soni    Int
+}
+
+model Mijoz {
+  id         Int       @id @default(autoincrement())
+  telegramId BigInt?   @unique
+  ism        String?
+  telefon    String?   @unique
+  yaratilgan DateTime  @default(now())
+  manzillar  Manzil[]
+  zakazlar   Zakaz[]
+}
+
+model Manzil {
+  id      Int    @id @default(autoincrement())
+  mijozId Int
+  mijoz   Mijoz  @relation(fields: [mijozId], references: [id], onDelete: Cascade)
+  matn    String
+  lat     Float?
+  lng     Float?
+}
+
+enum TolovUsuli {
+  CLICK
+  PAYME
+  NAQD
+  KASSA
+}
+
+model Tolov {
+  id         Int        @id @default(autoincrement())
+  zakazId    Int
+  zakaz      Zakaz      @relation(fields: [zakazId], references: [id])
+  usul       TolovUsuli
+  summa      Int
+  holat      String // S4'da holatlar aniqlanadi
   yaratilgan DateTime   @default(now())
+}
+
+// Chegirma qoidalari ochiq savol — maydonlar S4'da qo'shiladi.
+model Promokod {
+  id         Int      @id @default(autoincrement())
+  kod        String   @unique
+  faol       Boolean  @default(true)
+  yaratilgan DateTime @default(now())
+}
+
+model Admin {
+  id         Int     @id @default(autoincrement())
+  telegramId BigInt  @unique
+  ism        String?
 }
