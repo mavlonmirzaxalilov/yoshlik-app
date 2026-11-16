@@ -74,6 +74,9 @@ model Zakaz {
   xodimId         Int? // kassada kiritgan xodim
   xodim           Admin?        @relation(fields: [xodimId], references: [id])
   bekorSababi     String? // admin bekor qilganda
+  // Chek printeri (kassa kompyuteridagi dastur): bot zakazlari uchun ikki chek. null — hali chiqmagan.
+  oshxonaChek     DateTime?
+  kassaChek       DateTime?
   qatorlar        ZakazQatori[]
   tolovlar        Tolov[]
 }

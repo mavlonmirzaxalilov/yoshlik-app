@@ -17,6 +17,7 @@
 - [x] Kassa: kassir zakaz kiritadi, naqd/karta, qaytim (2026-11-16 qo'shildi)
 - [x] Harajatlar: turkumlar bilan, hisobotda foyda (2026-11-16 qo'shildi)
 - [x] Xodimlar: Admin, Kassir, Oshpaz rollari (2026-11-16 qo'shildi)
+- [x] Chek: bot zakazlariga oshxona va kassa cheki, kassa kompyuteridagi dastur orqali (2026-11-16 qo'shildi)
 - [x] Sozlamalar: kafe aloqasi, koordinata, yetkazish tarifi (2026-11-16 qo'shildi)
 
 ## Qabul mezoni
@@ -32,10 +33,11 @@
 - 2026-11-16: POS uslubidagi admin panel — Kassa, Zakazlar doskasi, Menyu (Blob rasm), Hisobotlar, Harajatlar, Xodimlar (rollar), Promokodlar, Sozlamalar; Telegram Login; lokal sinovdan o'tdi (src/app/admin, src/components/admin, src/app/api/admin, src/lib/auth.ts)
 - 2026-11-16: kompyuterda kirish — raqam ulashilmagan bo'lsa botga havola (/start admin) va avtomatik qayta tekshirish, "Siz admin emassiz" (src/components/admin/TelegramKirish.tsx, src/lib/botOqimi.ts)
 - 2026-11-16: kompyuterda kirish faqat bot orqali — Telegram Login oynasi olib tashlandi; sahifa so'rov ochadi (tugma + QR), botda /start k_<id> → raqam → "Kirishni tasdiqlash", ro'yxatda bo'lmasa "Siz admin emassiz"; lokal sinovdan o'tdi (src/lib/botKirish.ts, src/app/api/auth/bot-kirish, src/components/admin/TelegramKirish.tsx)
+- 2026-11-16: chek printeri — bot zakazi to'langanda oshxona va kassa cheki (80 mm, ESC/POS), dastur public/chek, kalit va holat Sozlamalarda, Zakazlar kartasida "Qayta"; printersiz (FAYL) rejimda lokal sinovdan o'tdi (src/lib/chek.ts, src/app/api/chek, public/chek)
 
 ## Handoff
 
-Ochiq: deploydan keyin `node --env-file=.env scripts/bot-sozla.mjs` (callback_query uchun) va production'da bot orqali kirish sinovi; production'da rasm yuklash sinovi; eski yoshlik-admin repo arxivlanishi (foydalanuvchi qaroriga ko'ra).
+Ochiq: haqiqiy printerlarda chek sinovi (kassa kompyuterida dastur o'rnatish); production'da rasm yuklash sinovi; eski yoshlik-admin repo arxivlanishi (foydalanuvchi qaroriga ko'ra).
 Production'da xodimlar ro'yxati bo'sh — kassir/oshpazlar Xodimlar bo'limidan qo'shiladi; egalar ADMIN_TELEFONLAR'da.
 Ishga tushirishdan oldin: Click/Payme, haqiqiy tarif va koordinata (endi Sozlamalar bo'limida), Vercel Pro.
 

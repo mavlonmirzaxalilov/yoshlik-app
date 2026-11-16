@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bell, Phone, X } from "lucide-react";
+import { Bell, Phone, Printer, X } from "lucide-react";
 import { api } from "@/lib/api";
 import { HOLAT_NOMLARI, keyingiHolat, type ZakazHolati } from "@/lib/holatlar";
 import { tolovNomi, usulNomi, type Zakaz } from "@/lib/turlar";
@@ -13,6 +13,8 @@ type AdminZakaz = Zakaz & {
   bekorSababi: string | null;
   mijoz: { ism: string | null; telefon: string | null } | null;
   xodim: { ism: string | null } | null;
+  oshxonaChek: string | null;
+  kassaChek: string | null;
 };
 
 const USTUNLAR: { nom: string; holatlar: ZakazHolati[] }[] = [
@@ -108,6 +110,18 @@ export default function ZakazlarSahifasi() {
     yukla();
   };
 
+  const chekQayta = async (z: AdminZakaz) => {
+    setBand(z.id);
+    const r = await api(`/api/admin/zakazlar/${z.id}/chek`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tur: "ikkalasi" }),
+    });
+    if (!r.ok) setXato(`#${z.raqam}: ${(await r.json()).xato ?? "chek chiqmadi"}`);
+    await yukla();
+    setBand(null);
+  };
+
   const bekorQilaOladi = men.rol === "ADMIN" || men.rol === "KASSIR";
   const yakunlangan = zakazlar?.filter((z) => z.holat === "BERILDI" || z.holat === "BEKOR") ?? [];
   const kutilmoqda = zakazlar?.filter((z) => z.holat === "TOLOV_KUTILMOQDA") ?? [];
@@ -150,6 +164,17 @@ export default function ZakazlarSahifasi() {
         </ul>
         <div className="mt-2 flex items-center justify-between">
           <span className="text-lg font-bold text-panel">{z.jamiSumma.toLocaleString("ru-RU")}</span>
+          {z.manba === "ONLAYN" && z.holat !== "TOLOV_KUTILMOQDA" && z.holat !== "BEKOR" && (
+            <span className="flex items-center gap-1 text-xs text-stone-500">
+              <Printer size={13} />
+              {z.oshxonaChek && z.kassaChek ? "Chek chiqdi" : "Chek kutilmoqda"}
+              {bekorQilaOladi && z.oshxonaChek && z.kassaChek && (
+                <button onClick={() => chekQayta(z)} disabled={band === z.id} className="ml-1 font-medium text-faol">
+                  Qayta
+                </button>
+              )}
+            </span>
+          )}
         </div>
         {z.bekorSababi && <p className="mt-1 text-xs text-red-600">Sabab: {z.bekorSababi}</p>}
         <div className="mt-3 flex gap-2">
