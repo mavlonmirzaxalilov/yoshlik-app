@@ -14,7 +14,7 @@ export async function GET() {
     telefon: telefonmi(telefon) ? telefon : null,
     // KAFE_TELEGRAM bo'sh, KAFE_TELEFON'da esa username bo'lsa — uni Telegram sifatida ishlatamiz
     telegram: usernamemi(telegram) ? telegram : usernamemi(telefon) ? telefon : null,
-    // Telegram Login Widget uchun bot username (admin kirishi)
+    // Bot username (havolalar uchun)
     bot: process.env.TELEGRAM_BOT_USERNAME || "yoshlik_kafe_bot",
   });
 }

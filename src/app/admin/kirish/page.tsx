@@ -9,7 +9,7 @@ export default function AdminKirishSahifasi() {
           Y
         </span>
         <h1 className="mt-4 text-2xl font-extrabold text-panel">Yoshlik — boshqaruv</h1>
-        <p className="mt-1 text-sm text-stone-500">Xodimlar Telegram akkaunti orqali kiradi</p>
+        <p className="mt-1 text-sm text-stone-500">Xodimlar Telegram bot orqali kiradi</p>
         <Suspense fallback={<p className="mt-6 text-stone-500">Yuklanmoqda...</p>}>
           <TelegramKirish />
         </Suspense>

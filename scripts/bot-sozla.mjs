@@ -30,7 +30,7 @@ if (men) console.log(`Bot: @${men.username}`);
 await bot("setWebhook", {
   url: `${url}/api/telegram/webhook`,
   secret_token: secret,
-  allowed_updates: ["message"],
+  allowed_updates: ["message", "callback_query"],
   drop_pending_updates: true,
 });
 await bot("setMyCommands", { commands: [{ command: "start", description: "Boshlash" }] });

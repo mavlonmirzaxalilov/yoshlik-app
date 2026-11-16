@@ -6,7 +6,7 @@
 
 ## Tasklar
 
-- [ ] Admin Telegram akkaunti orqali panelga kiradi (faqat Adminlar jadvalidagi akkaunt) *(Mini App ichida ishlaydi; kompyuterdagi Telegram Login — BotFather /setdomain dan keyin sinaladi)*
+- [x] Admin Telegram akkaunti orqali panelga kiradi (faqat xodimlar ro'yxatidagi raqam) — Mini App ichida va kompyuterda bot orqali (tugma yoki QR, botda tasdiqlash)
 - [x] Zakazlar oqimi: yangi zakazlar ro'yxati, holat va olish usuli bo'yicha filtr, raqam/telefon bo'yicha qidiruv
 - [x] Zakaz holatini bir bosishda keyingisiga o'tkazish; shikoyat uchun qo'lda bekor qilish
 - [x] Menyu boshqaruvi: kategoriya va taom qo'shish/tahrirlash (nom, narx, rasm, tavsif, hajm)
@@ -31,10 +31,11 @@
 <!-- hisobotchi to'ldiradi -->
 - 2026-11-16: POS uslubidagi admin panel — Kassa, Zakazlar doskasi, Menyu (Blob rasm), Hisobotlar, Harajatlar, Xodimlar (rollar), Promokodlar, Sozlamalar; Telegram Login; lokal sinovdan o'tdi (src/app/admin, src/components/admin, src/app/api/admin, src/lib/auth.ts)
 - 2026-11-16: kompyuterda kirish — raqam ulashilmagan bo'lsa botga havola (/start admin) va avtomatik qayta tekshirish, "Siz admin emassiz" (src/components/admin/TelegramKirish.tsx, src/lib/botOqimi.ts)
+- 2026-11-16: kompyuterda kirish faqat bot orqali — Telegram Login oynasi olib tashlandi; sahifa so'rov ochadi (tugma + QR), botda /start k_<id> → raqam → "Kirishni tasdiqlash", ro'yxatda bo'lmasa "Siz admin emassiz"; lokal sinovdan o'tdi (src/lib/botKirish.ts, src/app/api/auth/bot-kirish, src/components/admin/TelegramKirish.tsx)
 
 ## Handoff
 
-Ochiq: BotFather /setdomain → kompyuterda Telegram Login sinovi; production'da rasm yuklash sinovi; eski yoshlik-admin repo arxivlanishi (foydalanuvchi qaroriga ko'ra).
+Ochiq: deploydan keyin `node --env-file=.env scripts/bot-sozla.mjs` (callback_query uchun) va production'da bot orqali kirish sinovi; production'da rasm yuklash sinovi; eski yoshlik-admin repo arxivlanishi (foydalanuvchi qaroriga ko'ra).
 Production'da xodimlar ro'yxati bo'sh — kassir/oshpazlar Xodimlar bo'limidan qo'shiladi; egalar ADMIN_TELEFONLAR'da.
 Ishga tushirishdan oldin: Click/Payme, haqiqiy tarif va koordinata (endi Sozlamalar bo'limida), Vercel Pro.
 

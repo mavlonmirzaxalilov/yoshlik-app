@@ -65,6 +65,7 @@ Format: `sana · qaror · sabab`
 - 2026-11-16 · Harajatlar tayyor turkumlar bilan (Mahsulot, Ish haqi, Kommunal, Ijara, Boshqa); hisobotda foyda = savdo − harajat · foydalanuvchi qarori
 - 2026-11-16 · Hisobot: savdo, soni, o'rtacha chek, olish usuli, to'lov turi, manba, top-5 taom, bekorlar, harajat, foyda, kunlik grafik · PRD'dagi "hisobot tarkibi" savoli yopildi
 - 2026-11-16 · Kompyuterda kirish — Telegram Login Widget (BotFather /setdomain kerak); Mini App ichida — hozirgidek · SMS yo'q, xodimlar baribir Telegram'da
+- 2026-11-16 · Kompyuterda kirish Telegram Login Widget o'rniga faqat bot orqali: sahifa so'rov ochadi (tugma + QR), xodim botda raqamini ulashib "Kirishni tasdiqlash"ni bosadi; sessiyani faqat so'rovni ochgan sahifa (sir bilan) oladi · foydalanuvchi Telegram OAuth oynasi va telefon so'rovini istamadi
 - 2026-11-16 · Sozlamalar (kafe aloqasi, koordinata, yetkazish tarifi) bazadagi Sozlama jadvalida, bo'sh bo'lsa .env · kafe egasi Vercel'ga kirmasdan o'zgartira olsin
 - 2026-11-16 · Taom rasmlari Vercel Blob'da (ochiq store), JPG/PNG/WebP ≤ 2 MB; lokalda yuklash o'chiq · production omboriga lokal sinovdan yozilmasin
 - 2026-11-13 · Jarayon progress.html orqali kuzatiladi; sahifa hujjatlardan avtomatik yasaladi (`npm run progress`, `npm run dev` oldidan) · qo'lda yuritiladigan sahifa eskiradi, manba — sprint fayllari

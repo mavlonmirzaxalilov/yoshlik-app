@@ -1,4 +1,5 @@
 import { timingSafeEqual } from "node:crypto";
+import { kirishTasdigi } from "@/lib/botKirish";
 import { botXabari } from "@/lib/botOqimi";
 
 // POST /api/telegram/webhook — Telegram yangiliklari. Secret token tekshiriladi (setWebhook'da berilgan).
@@ -14,6 +15,7 @@ export async function POST(request: Request) {
   const update = await request.json().catch(() => null);
   try {
     if (update?.message) await botXabari(update.message);
+    else if (update?.callback_query) await kirishTasdigi(update.callback_query);
   } catch (e) {
     // Telegram 200 olmasa qayta-qayta yuboradi — xatoni logga yozib, 200 qaytaramiz
     console.error("[telegram] webhook xatosi:", e);

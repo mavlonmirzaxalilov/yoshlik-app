@@ -1,10 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { telefonniTozala, xodimRoli } from "@/lib/auth";
+import { kirishEskirgan, kirishgaBogla, kirishTaklifi, ochiqKirish } from "@/lib/botKirish";
 import { miniAppUrl, xabarYubor, type TelegramUser } from "@/lib/telegram";
 
 // Bot oqimi (foydalanuvchi belgilagan tartib, DECISIONS.md):
 // 1) /start — raqam yo'q bo'lsa faqat "Raqamni ulashish" tugmasi;
 // 2) raqam ulashilgach — "Xush kelibsiz!" va "Taom buyurtma qilish" tugmasi.
+// /start k_<id> — kompyuterda admin panelga kirish (src/lib/botKirish.ts).
 
 type Xabar = {
   chat: { id: number; type: string };
@@ -13,20 +15,28 @@ type Xabar = {
   contact?: { phone_number: string; user_id?: number; first_name?: string };
 };
 
-const raqamSora = (chatId: number) =>
-  xabarYubor(chatId, "Assalomu alaykum! Zakaz berish uchun telefon raqamingizni ulashing 👇", {
-    reply_markup: {
-      keyboard: [[{ text: "📱 Raqamni ulashish", request_contact: true }]],
-      resize_keyboard: true,
-      one_time_keyboard: true,
+const raqamSora = (chatId: number, kirish = false) =>
+  xabarYubor(
+    chatId,
+    kirish
+      ? "🔐 Boshqaruv paneliga kirish uchun telefon raqamingizni ulashing 👇"
+      : "Assalomu alaykum! Zakaz berish uchun telefon raqamingizni ulashing 👇",
+    {
+      reply_markup: {
+        keyboard: [[{ text: "📱 Raqamni ulashish", request_contact: true }]],
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      },
     },
-  });
+  );
+
+const menyuTugmasi = () => ({ inline_keyboard: [[{ text: "🍽 Taom buyurtma qilish", web_app: { url: miniAppUrl() } }]] });
 
 const xushKelibsiz = async (chatId: number) => {
   // Avval raqam klaviaturasini yopamiz, keyin Mini App tugmasini yuboramiz
   await xabarYubor(chatId, "✅ Raqamingiz saqlandi.", { reply_markup: { remove_keyboard: true } });
   return xabarYubor(chatId, "<b>Xush kelibsiz!</b>\nYoshlik kafesi — navbatsiz, issiq ovqat.", {
-    reply_markup: { inline_keyboard: [[{ text: "🍽 Taom buyurtma qilish", web_app: { url: miniAppUrl() } }]] },
+    reply_markup: menyuTugmasi(),
   });
 };
 
@@ -37,7 +47,7 @@ async function xodimHolati(chatId: number, telefon: string, adminSorovi: boolean
   const { rol } = await xodimRoli(telefon);
   if (rol) {
     const panel = `${miniAppUrl().replace(/\/$/, "")}/admin`;
-    const matn = `🔐 Siz <b>${ROL_NOMI[rol]}</b> sifatida ro'yxatdasiz.\nKompyuterdagi kirish sahifasi o'zi ochiladi (yoki pastdagi tugma).`;
+    const matn = `🔐 Siz <b>${ROL_NOMI[rol]}</b> sifatida ro'yxatdasiz.\nBoshqaruv paneli pastdagi tugmada.`;
     return xabarYubor(chatId, matn, {
       reply_markup: { inline_keyboard: [[{ text: "🔐 Boshqaruv paneli", web_app: { url: panel } }]] },
     });
@@ -82,10 +92,11 @@ async function raqamniSaqla(tgUser: TelegramUser, telefon: string): Promise<"ok"
 export async function botXabari(x: Xabar) {
   if (x.chat.type !== "private" || !x.from) return;
   const chatId = x.chat.id;
+  const tgId = x.from.id;
 
   if (x.contact) {
     // Faqat o'z raqami: boshqa odamning kontaktini yuborish rad etiladi
-    if (x.contact.user_id !== x.from.id) {
+    if (x.contact.user_id !== tgId) {
       return xabarYubor(chatId, "Iltimos, pastdagi tugma orqali <b>o'zingizning</b> raqamingizni ulashing.");
     }
     const telefon = telefonniTozala(x.contact.phone_number);
@@ -94,22 +105,36 @@ export async function botXabari(x: Xabar) {
     if (natija === "band") {
       return xabarYubor(chatId, "Bu raqam boshqa Telegram akkauntiga bog'langan. Kafe administratoriga murojaat qiling.");
     }
+
+    // Kompyuterda kirish kutilayotgan bo'lsa — to'g'ridan-to'g'ri o'shani davom ettiramiz
+    const kirishId = await ochiqKirish(tgId);
+    const mijoz = await prisma.mijoz.findUnique({ where: { telegramId: BigInt(tgId) }, select: { id: true } });
+    if (kirishId && mijoz) {
+      await xabarYubor(chatId, "✅ Raqamingiz saqlandi.", { reply_markup: { remove_keyboard: true } });
+      return kirishTaklifi(chatId, kirishId, { id: mijoz.id, telefon });
+    }
+
     await xushKelibsiz(chatId);
-    // Xodim bo'lsa rolini ham aytamiz (oddiy mijozga qo'shimcha xabar yo'q;
-    // kompyuterdagi kirish sahifasi "Siz admin emassiz"ni o'zi ko'rsatadi)
+    // Xodim bo'lsa rolini ham aytamiz (oddiy mijozga qo'shimcha xabar yo'q)
     return xodimHolati(chatId, telefon, false);
   }
 
-  const adminSorovi = x.text?.trim() === "/start admin";
-  const mijoz = await prisma.mijoz.findUnique({ where: { telegramId: BigInt(x.from.id) } });
+  const matn = x.text?.trim() ?? "";
+  const kirish = /^\/start k_([A-Za-z0-9_-]+)$/.exec(matn);
+  const mijoz = await prisma.mijoz.findUnique({ where: { telegramId: BigInt(tgId) } });
+
+  if (kirish) {
+    if (!(await kirishgaBogla(kirish[1], tgId))) return kirishEskirgan(chatId);
+    if (!mijoz?.telefon) return raqamSora(chatId, true);
+    return kirishTaklifi(chatId, kirish[1], { id: mijoz.id, telefon: mijoz.telefon });
+  }
+
   if (!mijoz?.telefon) return raqamSora(chatId);
-  if (adminSorovi) return xodimHolati(chatId, mijoz.telefon, true);
-  if (x.text?.startsWith("/start")) {
+  if (matn === "/start admin") return xodimHolati(chatId, mijoz.telefon, true);
+  if (matn.startsWith("/start")) {
     return xabarYubor(chatId, "<b>Xush kelibsiz!</b>\nYoshlik kafesi — navbatsiz, issiq ovqat.", {
-      reply_markup: { inline_keyboard: [[{ text: "🍽 Taom buyurtma qilish", web_app: { url: miniAppUrl() } }]] },
+      reply_markup: menyuTugmasi(),
     });
   }
-  return xabarYubor(chatId, "Zakaz berish uchun pastdagi tugmani bosing 👇", {
-    reply_markup: { inline_keyboard: [[{ text: "🍽 Taom buyurtma qilish", web_app: { url: miniAppUrl() } }]] },
-  });
+  return xabarYubor(chatId, "Zakaz berish uchun pastdagi tugmani bosing 👇", { reply_markup: menyuTugmasi() });
 }

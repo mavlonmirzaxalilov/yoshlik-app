@@ -120,6 +120,21 @@ model OtpKod {
   @@index([telefon])
 }
 
+// Kompyuterda bot orqali kirish so'rovi: sahifa so'rov ochadi, xodim Telegram'da botda tasdiqlaydi.
+// id — t.me havolasidagi ochiq identifikator; sirHash — faqat sahifadagi sirning xeshi (so'rovni faqat o'sha sahifa yakunlaydi).
+model BotKirish {
+  id          String   @id
+  sirHash     String
+  telegramId  BigInt?
+  mijozId     Int?
+  tasdiqlandi Boolean  @default(false)
+  ishlatildi  Boolean  @default(false)
+  muddati     DateTime
+  yaratilgan  DateTime @default(now())
+
+  @@index([telegramId])
+}
+
 // Kirish sessiyasi. id — cookie'dagi tokenning xeshi.
 model Sessiya {
   id         String   @id
