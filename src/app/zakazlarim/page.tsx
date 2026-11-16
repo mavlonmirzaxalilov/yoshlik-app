@@ -1,11 +1,12 @@
 "use client";
 
-import { api } from "@/lib/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { sanaFormat, somFormat, usulNomi, type Zakaz } from "@/lib/turlar";
-import HolatBelgisi from "@/components/HolatBelgisi";
+import { api } from "@/lib/api";
+import { type Zakaz } from "@/lib/turlar";
+import { FaolBuyurtma, TarixKartasi, faolmi } from "@/components/ZakazKartalari";
+import { Karta, Sarlavha, Tana } from "@/components/ui";
 
 export default function ZakazlarimSahifasi() {
   const router = useRouter();
@@ -23,41 +24,39 @@ export default function ZakazlarimSahifasi() {
       .catch((e: Error) => setXato(e.message));
   }, [router]);
 
+  const faollar = zakazlar?.filter(faolmi) ?? [];
+  const tarix = zakazlar?.filter((z) => !faolmi(z)) ?? [];
+
   return (
-    <main className="mx-auto w-full max-w-2xl px-4 py-6">
-      <h1 className="mb-4 text-2xl font-bold">Mening zakazlarim</h1>
-      {xato && <p className="text-red-600">{xato}</p>}
-      {!zakazlar && !xato && <p className="text-stone-500">Yuklanmoqda...</p>}
-      {zakazlar?.length === 0 && (
-        <p className="text-stone-600">
-          Hali zakaz yo&apos;q.{" "}
-          <Link href="/" className="text-emerald-700 underline">
-            Menyuga o&apos;tish
-          </Link>
-        </p>
-      )}
-      <ul className="space-y-3">
-        {zakazlar?.map((z) => (
-          <li key={z.id}>
-            <Link href={`/zakaz/${z.id}`} className="block rounded-xl bg-white p-4 shadow-sm hover:bg-stone-50">
-              <div className="flex justify-between">
-                <span className="flex items-center gap-2 font-semibold">
-                  Zakaz #{z.raqam} <HolatBelgisi holat={z.holat} />
-                </span>
-                <span className="font-semibold">{somFormat(z.jamiSumma)}</span>
-              </div>
-              <div className="text-sm text-stone-600">
-                {sanaFormat(z.yaratilgan)} ·{" "}
-                {usulNomi(z.olishUsuli)}
-                {z.olishVaqti && ` · ${z.olishVaqti}`}
-              </div>
-              <div className="mt-1 truncate text-sm text-stone-500">
-                {z.qatorlar.map((q) => `${q.nom} × ${q.soni}`).join(", ")}
-              </div>
+    <>
+      <Sarlavha sarlavha="Buyurtmalar" />
+      <Tana className="space-y-5">
+        {xato && <p className="text-qizil">{xato}</p>}
+        {!zakazlar && !xato && <p className="text-xira">Yuklanmoqda...</p>}
+        {zakazlar?.length === 0 && (
+          <Karta className="py-8 text-center">
+            <p className="text-xira">Hali buyurtma yo&apos;q.</p>
+            <Link href="/" className="mt-2 inline-block font-semibold text-asosiy">
+              Menyuga o&apos;tish
             </Link>
-          </li>
+          </Karta>
+        )}
+
+        {faollar.map((z) => (
+          <FaolBuyurtma key={z.id} zakaz={z} />
         ))}
-      </ul>
-    </main>
+
+        {tarix.length > 0 && (
+          <section>
+            <h2 className="mb-3 text-lg font-bold">Buyurtmalar tarixi</h2>
+            <div className="space-y-3">
+              {tarix.map((z) => (
+                <TarixKartasi key={z.id} zakaz={z} />
+              ))}
+            </div>
+          </section>
+        )}
+      </Tana>
+    </>
   );
 }

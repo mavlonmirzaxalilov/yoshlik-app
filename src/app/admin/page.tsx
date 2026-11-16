@@ -1,24 +1,33 @@
-import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { joriyFoydalanuvchi } from "@/lib/auth";
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { api, telegramWebApp } from "@/lib/api";
 import AdminZakazlar from "@/components/AdminZakazlar";
+import { Sarlavha, Tana } from "@/components/ui";
 
-// Server tomonda rol tekshiruvi: admin bo'lmasa sahifa ko'rsatilmaydi.
-async function AdminTekshiruv() {
-  const f = await joriyFoydalanuvchi();
-  if (!f) redirect("/kirish?qaytish=/admin");
-  if (!f.admin) redirect("/");
-  return <AdminZakazlar />;
-}
-
+// Rol tekshiruvi klientda: Telegram Mini App cookie emas, header bilan kiradi (server sahifasi uni ko'rmaydi).
+// Ma'lumotning o'zini /api/admin/... yo'llari himoyalaydi (admin bo'lmasa 403).
 export default function AdminSahifasi() {
+  const router = useRouter();
+  const [ruxsat, setRuxsat] = useState(false);
+
+  useEffect(() => {
+    api("/api/men")
+      .then((r) => r.json())
+      .then((d) => {
+        if (!d.mijoz) return router.replace(telegramWebApp() ? "/" : "/kirish?qaytish=/admin");
+        if (!d.admin) return router.replace("/");
+        setRuxsat(true);
+      });
+  }, [router]);
+
   return (
-    <main className="mx-auto w-full max-w-2xl px-4 py-6">
-      <h1 className="text-2xl font-bold">Admin</h1>
-      <p className="mb-4 text-stone-600">Bugungi zakazlar. To&apos;liq boshqaruv paneli S6&apos;da.</p>
-      <Suspense fallback={<p className="text-stone-500">Yuklanmoqda...</p>}>
-        <AdminTekshiruv />
-      </Suspense>
-    </main>
+    <>
+      <Sarlavha sarlavha="Admin">
+        <p className="mt-1 text-center text-sm text-white/90">Bugungi zakazlar · to&apos;liq panel S6&apos;da</p>
+      </Sarlavha>
+      <Tana className="pb-8">{ruxsat ? <AdminZakazlar /> : <p className="text-xira">Yuklanmoqda...</p>}</Tana>
+    </>
   );
 }

@@ -43,17 +43,17 @@ export default function AdminZakazlar() {
     setBand(null);
   };
 
-  if (!zakazlar) return xato ? <p className="text-red-600">{xato}</p> : <p className="text-stone-500">Yuklanmoqda...</p>;
+  if (!zakazlar) return xato ? <p className="text-qizil">{xato}</p> : <p className="text-stone-500">Yuklanmoqda...</p>;
   if (!zakazlar.length) return <p className="text-stone-600">Bugun hali zakaz yo&apos;q.</p>;
 
   return (
     <>
-      {xato && <p className="mb-3 text-red-600">{xato}</p>}
+      {xato && <p className="mb-3 text-qizil">{xato}</p>}
       <ul className="space-y-3">
         {zakazlar.map((z) => {
           const keyingi = keyingiHolat(z.holat, z.olishUsuli);
           return (
-            <li key={z.id} className="rounded-xl bg-white p-4 shadow-sm">
+            <li key={z.id} className="rounded-karta border border-stone-200/80 bg-white p-4 shadow-karta">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="flex items-center gap-2 font-semibold">
                   #{z.raqam} <HolatBelgisi holat={z.holat} />
@@ -73,7 +73,7 @@ export default function AdminZakazlar() {
                 <button
                   onClick={() => otkaz(z, keyingi)}
                   disabled={band === z.id}
-                  className="mt-3 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60"
+                  className="mt-3 rounded-xl bg-asosiy px-4 py-2 text-sm font-medium text-white hover:bg-asosiy-toq disabled:opacity-60"
                 >
                   → {HOLAT_NOMLARI[keyingi]}
                 </button>

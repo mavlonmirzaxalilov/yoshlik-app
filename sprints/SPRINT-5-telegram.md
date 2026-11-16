@@ -23,6 +23,7 @@
 
 <!-- hisobotchi to'ldiradi -->
 - 2026-11-16: @yoshlik_kafe_bot (raqam → xush kelibsiz → Mini App), initData header orqali kirish, holat xabarlari, 15 daqiqa qoidasi; Vercel + Neon'da ishga tushdi, Telegram'da foydalanuvchi tasdiqladi (src/lib/botOqimi.ts, src/lib/telegram.ts, src/lib/xabar.ts, src/lib/muddat.ts)
+- 2026-11-16: foydalanuvchi maketi bo'yicha yangi dizayn (Profil 1-variant, pastki menyu, /savat, Manzillarim, Yordam); proxy olib tashlandi — Telegram'da Profil/Buyurtmalar ochilmay qolardi (src/components/ui, src/app/profil, src/components/SavatchaProvider.tsx)
 
 ## Handoff
 

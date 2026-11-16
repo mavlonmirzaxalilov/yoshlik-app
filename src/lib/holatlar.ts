@@ -17,7 +17,7 @@ export const HOLAT_NOMLARI: Record<ZakazHolati, string> = {
   TAYYORLANMOQDA: "Tayyorlanmoqda",
   TAYYOR: "Tayyor",
   YOLDA: "Yo'lda",
-  BERILDI: "Berildi",
+  BERILDI: "Yakunlandi",
   BEKOR: "Bekor qilindi",
 };
 

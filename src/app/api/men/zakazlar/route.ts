@@ -9,7 +9,10 @@ export async function GET() {
   await muddatiOtganlarniYop(); // 15 daqiqalik to'lov muddati (cron zaxirasi bilan)
   const zakazlar = await prisma.zakaz.findMany({
     where: { mijozId: t.f.mijoz.id },
-    include: { qatorlar: { orderBy: { id: "asc" } } },
+    include: {
+      qatorlar: { orderBy: { id: "asc" } },
+      tolovlar: { select: { id: true, holat: true }, orderBy: { id: "asc" } },
+    },
     orderBy: { yaratilgan: "desc" },
   });
   return Response.json(zakazlar);

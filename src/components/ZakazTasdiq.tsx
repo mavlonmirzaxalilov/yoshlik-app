@@ -7,6 +7,8 @@ import { useParams, useRouter } from "next/navigation";
 import { BEKOR_MUMKIN, HOLAT_NOMLARI } from "@/lib/holatlar";
 import { somFormat, tolovNomi, usulNomi, type Zakaz } from "@/lib/turlar";
 import HolatBelgisi from "@/components/HolatBelgisi";
+import BosqichShkala from "@/components/BosqichShkala";
+import { Sarlavha } from "@/components/ui";
 
 export default function ZakazTasdiq() {
   const { id } = useParams<{ id: string }>();
@@ -49,15 +51,27 @@ export default function ZakazTasdiq() {
   const kutilayotganTolov = zakaz?.tolovlar?.find((t) => t.holat === "KUTILMOQDA");
   const qaytarildi = zakaz?.tolovlar?.some((t) => t.holat === "QAYTARILDI");
 
+  const faol = zakaz && !["TOLOV_KUTILMOQDA", "BERILDI", "BEKOR"].includes(zakaz.holat);
+
   return (
-    <main className="mx-auto w-full max-w-2xl px-4 py-6">
-      {xato && <p className="mb-3 text-red-600">{xato}</p>}
+    <>
+      <Sarlavha sarlavha={zakaz ? `Buyurtma #${zakaz.raqam}` : "Buyurtma"} />
+      <main className="mx-auto w-full max-w-xl px-4 pb-28 pt-5">
+      {xato && <p className="mb-3 text-qizil">{xato}</p>}
       {!zakaz && !xato && <p className="text-stone-500">Yuklanmoqda...</p>}
 
+      {zakaz && faol && (
+        <div className="mb-4 rounded-karta border border-shaftoli-chegara bg-shaftoli/70 p-4">
+          <BosqichShkala holat={zakaz.holat} olishUsuli={zakaz.olishUsuli} />
+        </div>
+      )}
+
       {zakaz && (
-        <section className="rounded-xl bg-white p-5 shadow-sm">
-          <HolatBelgisi holat={zakaz.holat} />
-          <h1 className="mt-2 text-3xl font-bold">Zakaz #{zakaz.raqam}</h1>
+        <section className="rounded-karta border border-stone-200/80 bg-white p-5 shadow-karta">
+          <div className="flex items-center justify-between gap-2">
+            <h1 className="text-2xl font-bold">Zakaz #{zakaz.raqam}</h1>
+            <HolatBelgisi holat={zakaz.holat} />
+          </div>
 
           <dl className="mt-4 grid grid-cols-2 gap-y-2">
             <dt className="text-stone-600">Olish usuli</dt>
@@ -82,7 +96,7 @@ export default function ZakazTasdiq() {
                 <dt className="text-stone-600">To&apos;lov</dt>
                 <dd>
                   {tolovNomi(zakaz.tolovUsuli)}
-                  {qaytarildi && <span className="text-emerald-700"> · pul qaytarildi</span>}
+                  {qaytarildi && <span className="text-asosiy-toq"> · pul qaytarildi</span>}
                 </dd>
               </>
             )}
@@ -100,7 +114,7 @@ export default function ZakazTasdiq() {
           </ul>
           <div className="space-y-1 border-t border-stone-200 pt-3 text-sm">
             {zakaz.chegirma > 0 && (
-              <div className="flex justify-between text-emerald-700">
+              <div className="flex justify-between text-asosiy-toq">
                 <span>Chegirma</span>
                 <span>−{somFormat(zakaz.chegirma)}</span>
               </div>
@@ -111,28 +125,28 @@ export default function ZakazTasdiq() {
                 <span>{somFormat(zakaz.yetkazishNarxi)}</span>
               </div>
             )}
-            <div className="flex justify-between text-base font-semibold">
+            <div className="flex justify-between text-lg font-bold">
               <span>Jami</span>
-              <span>{somFormat(zakaz.jamiSumma)}</span>
+              <span className="text-asosiy">{somFormat(zakaz.jamiSumma)}</span>
             </div>
           </div>
 
           {zakaz.holat === "TOLOV_KUTILMOQDA" && kutilayotganTolov && (
             <button
               onClick={() => router.push(`/tolov/${kutilayotganTolov.id}`)}
-              className="mt-5 w-full rounded-lg bg-emerald-600 py-3 font-semibold text-white hover:bg-emerald-700"
+              className="mt-5 w-full rounded-xl bg-asosiy py-3 font-semibold text-white hover:bg-asosiy-toq"
             >
               To&apos;lashga o&apos;tish
             </button>
           )}
           {zakaz.holat === "TAYYOR" && zakaz.olishUsuli !== "YETKAZISH" && (
-            <p className="mt-5 font-medium text-emerald-700">Zakazingiz tayyor — kassada raqamni ayting.</p>
+            <p className="mt-5 font-medium text-asosiy-toq">Zakazingiz tayyor — kassada raqamni ayting.</p>
           )}
           {BEKOR_MUMKIN.includes(zakaz.holat) && (
             <button
               onClick={bekorQil}
               disabled={band}
-              className="mt-3 w-full rounded-lg border border-red-300 py-3 text-red-700 hover:bg-red-50 disabled:opacity-60"
+              className="mt-3 w-full rounded-xl border border-red-300 py-3 text-qizil hover:bg-qizil-fon disabled:opacity-60"
             >
               Zakazni bekor qilish
             </button>
@@ -141,9 +155,10 @@ export default function ZakazTasdiq() {
         </section>
       )}
 
-      <Link href="/" className="mt-6 inline-block text-emerald-700 underline">
-        Menyuga qaytish
+      <Link href="/zakazlarim" className="mt-6 inline-block font-medium text-asosiy">
+        ← Buyurtmalarga qaytish
       </Link>
-    </main>
+      </main>
+    </>
   );
 }

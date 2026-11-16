@@ -51,13 +51,13 @@ export default function KirishFormasi() {
     }
   };
 
-  const maydon = "w-full rounded-lg border border-stone-300 px-3 py-2";
+  const maydon = "w-full rounded-xl border border-stone-300 bg-white px-3 py-2.5 outline-none focus:border-asosiy focus:ring-2 focus:ring-shaftoli";
   const tugma =
-    "w-full rounded-lg bg-emerald-600 py-3 font-semibold text-white hover:bg-emerald-700 disabled:opacity-60";
+    "w-full rounded-xl bg-asosiy py-3 font-semibold text-white hover:bg-asosiy-toq disabled:opacity-60";
 
   if (bosqich === "telefon") {
     return (
-      <form onSubmit={kodSora} className="space-y-4 rounded-xl bg-white p-5 shadow-sm">
+      <form onSubmit={kodSora} className="space-y-4 rounded-karta border border-stone-200/80 bg-white p-5 shadow-karta">
         <label className="block">
           <span className="mb-1 block font-medium">Telefon raqami</span>
           <div className="flex items-center gap-2">
@@ -83,7 +83,7 @@ export default function KirishFormasi() {
           />
           <span>Telefon raqamim va zakazlarim saqlanishiga roziman</span>
         </label>
-        {xato && <p className="text-red-600">{xato}</p>}
+        {xato && <p className="text-qizil">{xato}</p>}
         <button type="submit" disabled={band || !rozilik} className={tugma}>
           {band ? "Yuborilmoqda..." : "Kod yuborish"}
         </button>
@@ -92,7 +92,7 @@ export default function KirishFormasi() {
   }
 
   return (
-    <form onSubmit={kodTekshir} className="space-y-4 rounded-xl bg-white p-5 shadow-sm">
+    <form onSubmit={kodTekshir} className="space-y-4 rounded-karta border border-stone-200/80 bg-white p-5 shadow-karta">
       <p className="text-stone-700">
         Kod <strong>+998 {telefon}</strong> raqamiga yuborildi.
       </p>
@@ -109,7 +109,7 @@ export default function KirishFormasi() {
           required
         />
       </label>
-      {xato && <p className="text-red-600">{xato}</p>}
+      {xato && <p className="text-qizil">{xato}</p>}
       <button type="submit" disabled={band} className={tugma}>
         {band ? "Tekshirilmoqda..." : "Kirish"}
       </button>

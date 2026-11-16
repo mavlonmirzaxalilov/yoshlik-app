@@ -3,22 +3,20 @@
 import { api, telegramWebApp } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { OLISH_USULLARI, somFormat, tolovUsullari, type OlishUsuli, type Taom, type TolovUsuli } from "@/lib/turlar";
-import { savatchaniYoz } from "@/lib/sessiyaKlient";
-
-export type SavatchaQatori = { taom: Taom; soni: number };
-
-type Props = {
-  qatorlar: SavatchaQatori[];
-  soniniOzgartir: (taom: Taom, farq: number) => void;
-};
+import Link from "next/link";
+import { Bike, MapPin, Minus, Plus, ShoppingBag, Utensils } from "lucide-react";
+import { OLISH_USULLARI, somFormat, tolovUsullari, type OlishUsuli, type TolovUsuli } from "@/lib/turlar";
+import { useSavatcha } from "@/components/SavatchaProvider";
+import TaomRasmi from "@/components/TaomRasmi";
+import { Karta, maydon, tugmaAsosiy } from "@/components/ui";
 
 type Manzil = { id: number; matn: string };
 type Nuqta = { lat: number; lng: number };
 type YetkazishHisob = { mumkin: true; km: number; narx: number } | { mumkin: false; km: number | null; sabab: string };
 
-export default function Savatcha({ qatorlar, soniniOzgartir }: Props) {
+export default function Savatcha() {
   const router = useRouter();
+  const { qatorlar, soniniOzgartir, tozala, tiklandi } = useSavatcha();
   const [usul, setUsul] = useState<OlishUsuli>("OLIB_KETISH");
   const [vaqt, setVaqt] = useState("");
   const [tolovUsuli, setTolovUsuli] = useState<TolovUsuli>("CLICK");
@@ -142,11 +140,11 @@ export default function Savatcha({ qatorlar, soniniOzgartir }: Props) {
         // Savatcha localStorage'da saqlangan — kirgandan keyin menyuga qaytib tiklanadi.
         // Sahifa holati qaytishda saqlanadi, shuning uchun tugmani qayta faollashtiramiz.
         setYuborilmoqda(false);
-        router.push("/kirish?qaytish=/");
+        router.push("/kirish?qaytish=/savat");
         return;
       }
       if (!javob.ok) throw new Error(data.xato ?? "Zakaz yuborilmadi");
-      savatchaniYoz([]);
+      tozala();
       router.push(data.tolovUrl ?? `/zakaz/${data.id}`);
     } catch (e) {
       setXato(e instanceof Error ? e.message : "Zakaz yuborilmadi");
@@ -154,54 +152,78 @@ export default function Savatcha({ qatorlar, soniniOzgartir }: Props) {
     }
   };
 
+  const USUL_IKONA = { ZAL: Utensils, OLIB_KETISH: ShoppingBag, YETKAZISH: Bike } as const;
   const tanlov = (faol: boolean) =>
-    `cursor-pointer rounded-lg border px-3 py-2 text-sm ${faol ? "border-emerald-600 bg-emerald-50" : "border-stone-300"}`;
-  const maydon = "w-full rounded-lg border border-stone-300 px-3 py-2";
+    `flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 text-sm font-medium ${
+      faol ? "border-asosiy bg-shaftoli text-asosiy-toq" : "border-stone-200 bg-white text-stone-700"
+    }`;
   const qator = "flex justify-between";
+  const bolimSarlavha = "mb-3 font-bold";
 
   const yetkazishTayyor = usul !== "YETKAZISH" || (yetkazish?.mumkin && manzil.trim().length >= 5);
 
+  if (!tiklandi) return <p className="text-xira">Yuklanmoqda...</p>;
+
+  if (qatorlar.length === 0) {
+    return (
+      <Karta className="flex flex-col items-center gap-3 py-10 text-center">
+        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-shaftoli text-asosiy-toq">
+          <ShoppingBag size={28} />
+        </span>
+        <p className="text-xira">Savat bo&apos;sh — menyudan taom qo&apos;shing.</p>
+        <Link href="/" className="font-semibold text-asosiy">
+          Menyuga o&apos;tish
+        </Link>
+      </Karta>
+    );
+  }
+
   return (
-    <section className="mt-8 rounded-xl bg-white p-4 shadow-sm">
-      <h2 className="mb-3 text-lg font-semibold">Savatcha</h2>
-
-      {qatorlar.length === 0 ? (
-        <p className="text-stone-500">Savatcha bo&apos;sh — menyudan taom qo&apos;shing.</p>
-      ) : (
-        <>
-          <ul className="divide-y divide-stone-100">
-            {qatorlar.map((q) => (
-              <li key={q.taom.id} className="flex items-center justify-between gap-2 py-2">
-                <span className={q.taom.tugadi ? "text-stone-400 line-through" : ""}>
+    <div className="space-y-4">
+      <Karta>
+        <ul className="divide-y divide-stone-100">
+          {qatorlar.map((q) => (
+            <li key={q.taom.id} className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
+              <TaomRasmi taom={q.taom} />
+              <div className="min-w-0 flex-1">
+                <div className={`truncate font-semibold ${q.taom.tugadi ? "text-stone-400 line-through" : ""}`}>
                   {q.taom.nom}
-                  {q.taom.tugadi && <span className="ml-1 text-xs text-red-600 no-underline">tugadi</span>}
-                </span>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => soniniOzgartir(q.taom, -1)}
-                    aria-label={`${q.taom.nom} sonini kamaytirish`}
-                    className="h-8 w-8 rounded-lg border border-stone-300"
-                  >
-                    −
-                  </button>
-                  <span className="w-6 text-center">{q.soni}</span>
-                  <button
-                    onClick={() => soniniOzgartir(q.taom, 1)}
-                    aria-label={`${q.taom.nom} sonini oshirish`}
-                    className="h-8 w-8 rounded-lg border border-stone-300"
-                  >
-                    +
-                  </button>
-                  <span className="w-24 text-right text-stone-700">{somFormat(q.taom.narx * q.soni)}</span>
                 </div>
-              </li>
-            ))}
-          </ul>
+                {q.taom.tugadi ? (
+                  <div className="text-xs font-medium text-qizil">tugadi</div>
+                ) : (
+                  <div className="font-bold text-asosiy">{somFormat(q.taom.narx * q.soni)}</div>
+                )}
+              </div>
+              <div className="flex items-center gap-2 rounded-xl bg-stone-100 p-1">
+                <button
+                  onClick={() => soniniOzgartir(q.taom, -1)}
+                  aria-label={`${q.taom.nom} sonini kamaytirish`}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-white"
+                >
+                  <Minus size={16} />
+                </button>
+                <span className="w-5 text-center font-semibold">{q.soni}</span>
+                <button
+                  onClick={() => soniniOzgartir(q.taom, 1)}
+                  aria-label={`${q.taom.nom} sonini oshirish`}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-asosiy text-white"
+                >
+                  <Plus size={16} />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </Karta>
 
-          <fieldset className="mt-5">
-            <legend className="mb-2 font-medium">Olish usuli</legend>
-            <div className="flex flex-wrap gap-2">
-              {OLISH_USULLARI.map((u) => (
+      <Karta>
+        <fieldset>
+          <legend className={bolimSarlavha}>Olish usuli</legend>
+          <div className="grid grid-cols-3 gap-2">
+            {OLISH_USULLARI.map((u) => {
+              const Ikona = USUL_IKONA[u.qiymat];
+              return (
                 <label key={u.qiymat} className={tanlov(usul === u.qiymat)}>
                   <input
                     type="radio"
@@ -211,155 +233,164 @@ export default function Savatcha({ qatorlar, soniniOzgartir }: Props) {
                     onChange={() => usulniTanla(u.qiymat)}
                     className="sr-only"
                   />
-                  {u.nom}
+                  <Ikona size={16} className="shrink-0" />
+                  {u.qiymat === "YETKAZISH" ? "Yetkazish" : u.nom}
                 </label>
-              ))}
-            </div>
-          </fieldset>
+              );
+            })}
+          </div>
+        </fieldset>
 
-          <label className="mt-4 block">
-            <span className="mb-1 block font-medium">{usul === "YETKAZISH" ? "Yetkazish vaqti" : "Olish vaqti"}</span>
+        <label className="mt-4 block">
+          <span className="mb-1.5 block text-sm font-medium text-xira">
+            {usul === "YETKAZISH" ? "Yetkazish vaqti" : "Olish vaqti"}
+          </span>
+          <input type="time" value={vaqt} onChange={(e) => setVaqt(e.target.value)} className={maydon} />
+        </label>
+
+        {usul === "YETKAZISH" && (
+          <div className="mt-4 space-y-2">
+            <span className="block text-sm font-medium text-xira">Yetkazish manzili</span>
+            {manzillar.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {manzillar.map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => setManzil(m.matn)}
+                    className={`rounded-xl border px-3 py-2 text-left text-sm ${
+                      manzil === m.matn ? "border-asosiy bg-shaftoli text-asosiy-toq" : "border-stone-200"
+                    }`}
+                  >
+                    {m.matn}
+                  </button>
+                ))}
+              </div>
+            )}
             <input
-              type="time"
-              value={vaqt}
-              onChange={(e) => setVaqt(e.target.value)}
-              className="rounded-lg border border-stone-300 px-3 py-2"
+              value={manzil}
+              onChange={(e) => setManzil(e.target.value)}
+              className={maydon}
+              placeholder="Ko'cha, uy, xonadon, mo'ljal"
             />
-          </label>
-
-          {usul === "YETKAZISH" && (
-            <div className="mt-4 space-y-2">
-              <span className="block font-medium">Yetkazish manzili</span>
-              {manzillar.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {manzillar.map((m) => (
-                    <button key={m.id} type="button" onClick={() => setManzil(m.matn)} className={tanlov(manzil === m.matn)}>
-                      {m.matn}
-                    </button>
-                  ))}
-                </div>
-              )}
-              <input
-                value={manzil}
-                onChange={(e) => setManzil(e.target.value)}
-                className={maydon}
-                placeholder="Ko'cha, uy, xonadon, mo'ljal"
-              />
-              <button
-                type="button"
-                onClick={joylashuvYubor}
-                className="rounded-lg border border-emerald-600 px-3 py-2 text-sm text-emerald-700 hover:bg-emerald-50"
-              >
-                📍 {nuqta ? "Joylashuvni yangilash" : "Joylashuvimni yuborish"}
-              </button>
-              {joylashuvXato && <p className="text-sm text-red-600">{joylashuvXato}</p>}
-              {yetkazish && !yetkazish.mumkin && <p className="text-sm text-red-600">{yetkazish.sabab}</p>}
-              {yetkazish?.mumkin && (
-                <p className="text-sm text-stone-600">
-                  Masofa {yetkazish.km} km · yetkazish {somFormat(yetkazish.narx)}
-                </p>
-              )}
-            </div>
-          )}
-
-          <fieldset className="mt-4">
-            <legend className="mb-2 font-medium">To&apos;lov</legend>
-            <div className="flex flex-wrap gap-2">
-              {tolovUsullari(usul).map((t) => (
-                <label key={t.qiymat} className={tanlov(tolovUsuli === t.qiymat)}>
-                  <input
-                    type="radio"
-                    name="tolov"
-                    value={t.qiymat}
-                    checked={tolovUsuli === t.qiymat}
-                    onChange={() => setTolovUsuli(t.qiymat)}
-                    className="sr-only"
-                  />
-                  {t.nom}
-                </label>
-              ))}
-            </div>
-          </fieldset>
-
-          <div className="mt-4">
-            {promo ? (
-              <p className="text-sm text-emerald-700">
-                Promokod {promo.kod}: −{promo.foiz}%{" "}
-                <button type="button" onClick={() => setPromo(null)} className="ml-1 text-stone-500 underline">
-                  olib tashlash
-                </button>
+            <button
+              type="button"
+              onClick={joylashuvYubor}
+              className="flex items-center gap-1.5 rounded-xl border border-asosiy px-3 py-2 text-sm font-medium text-asosiy-toq hover:bg-shaftoli"
+            >
+              <MapPin size={16} /> {nuqta ? "Joylashuvni yangilash" : "Joylashuvimni yuborish"}
+            </button>
+            {joylashuvXato && <p className="text-sm text-qizil">{joylashuvXato}</p>}
+            {yetkazish && !yetkazish.mumkin && <p className="text-sm text-qizil">{yetkazish.sabab}</p>}
+            {yetkazish?.mumkin && (
+              <p className="text-sm text-xira">
+                Masofa {yetkazish.km} km · yetkazish {somFormat(yetkazish.narx)}
               </p>
-            ) : (
-              <div className="flex gap-2">
+            )}
+          </div>
+        )}
+      </Karta>
+
+      <Karta>
+        <fieldset>
+          <legend className={bolimSarlavha}>To&apos;lov</legend>
+          <div className="grid grid-cols-3 gap-2">
+            {tolovUsullari(usul).map((t) => (
+              <label key={t.qiymat} className={tanlov(tolovUsuli === t.qiymat)}>
                 <input
-                  value={promokod}
-                  onChange={(e) => setPromokod(e.target.value)}
-                  className={maydon}
-                  placeholder="Promokod"
+                  type="radio"
+                  name="tolov"
+                  value={t.qiymat}
+                  checked={tolovUsuli === t.qiymat}
+                  onChange={() => setTolovUsuli(t.qiymat)}
+                  className="sr-only"
                 />
-                <button type="button" onClick={promoQolla} className="rounded-lg border border-stone-300 px-3 text-sm">
-                  Qo&apos;llash
-                </button>
-              </div>
-            )}
-            {promoXato && <p className="mt-1 text-sm text-red-600">{promoXato}</p>}
+                {t.qiymat === "NAQD" ? "Naqd" : t.nom}
+              </label>
+            ))}
           </div>
+          {tolovUsuli === "NAQD" && <p className="mt-2 text-sm text-xira">Kuryerga naqd to&apos;lanadi</p>}
+        </fieldset>
 
-          <div className="mt-4 space-y-1 border-t border-stone-200 pt-3 text-sm">
-            <div className={qator}>
-              <span>Taomlar</span>
-              <span>{somFormat(taomlarSumma)}</span>
-            </div>
-            {chegirma > 0 && (
-              <div className={`${qator} text-emerald-700`}>
-                <span>Chegirma</span>
-                <span>−{somFormat(chegirma)}</span>
-              </div>
-            )}
-            {usul === "YETKAZISH" && (
-              <div className={qator}>
-                <span>Yetkazish</span>
-                <span>{yetkazish?.mumkin ? somFormat(yetkazishNarxi) : "—"}</span>
-              </div>
-            )}
-            <div className={`${qator} pt-1 text-base font-semibold`}>
-              <span>Jami</span>
-              <span data-testid="jami">{somFormat(jami)}</span>
-            </div>
-          </div>
-
-          {tugaganlar.length > 0 && (
-            <p className="mt-3 text-red-600">Tugagan taomlarni savatchadan olib tashlang.</p>
-          )}
-          {xato && <p className="mt-3 text-red-600">{xato}</p>}
-
-          {raqamKerak && (
-            <div className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
-              Zakaz berish uchun telefon raqamingizni ulashing.
+        <div className="mt-4">
+          {promo ? (
+            <p className="text-sm font-medium text-yashil">
+              Promokod {promo.kod}: −{promo.foiz}%{" "}
+              <button type="button" onClick={() => setPromo(null)} className="ml-1 font-normal text-xira underline">
+                olib tashlash
+              </button>
+            </p>
+          ) : (
+            <div className="flex gap-2">
+              <input value={promokod} onChange={(e) => setPromokod(e.target.value)} className={maydon} placeholder="Promokod" />
               <button
                 type="button"
-                onClick={raqamUlash}
-                className="mt-2 block w-full rounded-lg border border-amber-600 py-2 font-medium"
+                onClick={promoQolla}
+                className="shrink-0 rounded-xl border border-stone-300 px-4 text-sm font-medium"
               >
-                📱 Raqamni ulashish
+                Qo&apos;llash
               </button>
             </div>
           )}
+          {promoXato && <p className="mt-1 text-sm text-qizil">{promoXato}</p>}
+        </div>
+      </Karta>
 
+      <Karta className="border-shaftoli-chegara bg-shaftoli/60">
+        <div className="space-y-1.5 text-sm">
+          <div className={qator}>
+            <span className="text-xira">Taomlar</span>
+            <span>{somFormat(taomlarSumma)}</span>
+          </div>
+          {chegirma > 0 && (
+            <div className={`${qator} text-yashil`}>
+              <span>Chegirma</span>
+              <span>−{somFormat(chegirma)}</span>
+            </div>
+          )}
+          {usul === "YETKAZISH" && (
+            <div className={qator}>
+              <span className="text-xira">Yetkazish</span>
+              <span>{yetkazish?.mumkin ? somFormat(yetkazishNarxi) : "—"}</span>
+            </div>
+          )}
+          <div className={`${qator} border-t border-shaftoli-chegara pt-2 text-lg font-bold`}>
+            <span>Jami</span>
+            <span data-testid="jami" className="text-asosiy">
+              {somFormat(jami)}
+            </span>
+          </div>
+        </div>
+      </Karta>
+
+      {tugaganlar.length > 0 && <p className="text-qizil">Tugagan taomlarni savatdan olib tashlang.</p>}
+      {xato && <p className="text-qizil">{xato}</p>}
+
+      {raqamKerak && (
+        <div className="rounded-karta bg-amber-50 p-4 text-sm text-amber-900">
+          Zakaz berish uchun telefon raqamingizni ulashing.
           <button
-            onClick={zakazBer}
-            disabled={yuborilmoqda || raqamKerak || !vaqt || !yetkazishTayyor || tugaganlar.length > 0}
-            className="mt-5 w-full rounded-lg bg-emerald-600 py-3 font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+            type="button"
+            onClick={raqamUlash}
+            className="mt-2 block w-full rounded-xl border border-amber-600 py-2.5 font-medium"
           >
-            {yuborilmoqda
-              ? "Yuborilmoqda..."
-              : tolovUsuli === "NAQD"
-                ? "Zakaz berish"
-                : `To'lashga o'tish — ${somFormat(jami)}`}
+            📱 Raqamni ulashish
           </button>
-          {!vaqt && <p className="mt-2 text-center text-sm text-stone-500">Avval vaqtni tanlang</p>}
-        </>
+        </div>
       )}
-    </section>
+
+      <button
+        onClick={zakazBer}
+        disabled={yuborilmoqda || raqamKerak || !vaqt || !yetkazishTayyor || tugaganlar.length > 0}
+        className={tugmaAsosiy}
+      >
+        {yuborilmoqda
+          ? "Yuborilmoqda..."
+          : tolovUsuli === "NAQD"
+            ? "Zakaz berish"
+            : `To'lashga o'tish — ${somFormat(jami)}`}
+      </button>
+      {!vaqt && <p className="text-center text-sm text-xira">Avval vaqtni tanlang</p>}
+    </div>
   );
 }

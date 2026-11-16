@@ -50,13 +50,13 @@ export default function TestTolov() {
     router.push(`/zakaz/${data.zakazId}`);
   };
 
-  if (xato && !tolov) return <p className="text-red-600">{xato}</p>;
+  if (xato && !tolov) return <p className="text-qizil">{xato}</p>;
   if (!tolov) return <p className="text-stone-500">Yuklanmoqda...</p>;
 
   const yakunlangan = tolov.holat !== "KUTILMOQDA";
 
   return (
-    <section className="rounded-xl bg-white p-5 shadow-sm">
+    <section className="rounded-karta border border-stone-200/80 bg-white p-5 shadow-karta">
       <p className="mb-3 inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
         TEST REJIMI — haqiqiy pul yechilmaydi
       </p>
@@ -64,7 +64,7 @@ export default function TestTolov() {
       <p className="mt-1 text-stone-600">Zakaz #{tolov.zakaz.raqam}</p>
       <p className="mt-4 text-3xl font-bold">{somFormat(tolov.summa)}</p>
 
-      {xato && <p className="mt-3 text-red-600">{xato}</p>}
+      {xato && <p className="mt-3 text-qizil">{xato}</p>}
 
       {yakunlangan ? (
         <p className="mt-5 text-stone-600">Bu to&apos;lov allaqachon yakunlangan.</p>
@@ -73,14 +73,14 @@ export default function TestTolov() {
           <button
             onClick={() => natija("tolandi")}
             disabled={band}
-            className="w-full rounded-lg bg-emerald-600 py-3 font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+            className="w-full rounded-xl bg-asosiy py-3 font-semibold text-white hover:bg-asosiy-toq disabled:opacity-60"
           >
             To&apos;lash
           </button>
           <button
             onClick={() => natija("bekor")}
             disabled={band}
-            className="w-full rounded-lg border border-stone-300 py-3 text-stone-700 hover:bg-stone-100 disabled:opacity-60"
+            className="w-full rounded-xl border border-stone-300 py-3 text-stone-700 hover:bg-stone-50 disabled:opacity-60"
           >
             To&apos;lovni rad etish
           </button>

@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
+/* Dizayn tizimi — foydalanuvchi maketidan (Profil, 1-variant). */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f6f6;
+  --foreground: #1f1a17;
 }
 
 @theme inline {
@@ -12,7 +13,32 @@
   --font-mono: var(--font-geist-mono);
 }
 
+@theme {
+  /* Asosiy to'q sariq va uning och tuslari */
+  --color-asosiy: #f07a22;
+  --color-asosiy-toq: #d9661a;
+  --color-shaftoli: #fdeee5;
+  --color-shaftoli-chegara: #f9d9c6;
+  /* Matn */
+  --color-xira: #6b625c;
+  /* Holat belgilari */
+  --color-yashil: #146b3a;
+  --color-yashil-fon: #dcefe3;
+  --color-qizil: #b4232a;
+  --color-qizil-fon: #fbe3e4;
+  --radius-karta: 1rem;
+  --shadow-karta: 0 1px 2px rgb(0 0 0 / 0.04), 0 2px 8px rgb(0 0 0 / 0.04);
+}
+
 body {
-  background: #f5f5f4;
+  background: var(--background);
   color: var(--foreground);
+}
+
+/* Gorizontal kategoriya chiplari — aylantirish chizig'i ko'rinmasin */
+.scroll-yashirin {
+  scrollbar-width: none;
+}
+.scroll-yashirin::-webkit-scrollbar {
+  display: none;
 }

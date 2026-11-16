@@ -54,6 +54,10 @@ Format: `sana · qaror · sabab`
 - 2026-11-16 · Telegram raqami veb orqali kirgan mijozniki bo'lsa — akkauntlar birlashtiriladi; raqam boshqa Telegram akkauntida bo'lsa — rad · zakaz tarixi yo'qolmasin, begona raqam olinmasin
 - 2026-11-16 · To'lanmagan onlayn zakaz 15 daqiqadan keyin avtomatik bekor; tekshiruv zakaz ochilganda + kunlik Vercel Cron · foydalanuvchi qarori; Hobby'da cron kuniga bir marta
 - 2026-11-16 · Productionda test to'lovni faqat admin bosa oladi; Click/Payme ulanmaguncha bot mijozlarga e'lon qilinmaydi · soxta "to'landi" xavfi
+- 2026-11-16 · Dizayn foydalanuvchi maketidan (Profil, 1-variant): to'q sariq uslub, pastki menyu (Asosiy · Buyurtmalar · Savat · Profil), qolgan sahifalar shu uslubda; ikonalar lucide-react · foydalanuvchi qarori
+- 2026-11-16 · Maketdan "Til" va ⚙️ olib tashlandi, "Manzillarim" qo'shildi, bosqichlar holatlarimizga moslandi, "Yordam"da kafe telefoni va admin Telegram (KAFE_TELEFON, KAFE_TELEGRAM) · PRD'da faqat o'zbek tili, sozlama yo'q; foydalanuvchi rozi bo'ldi
+- 2026-11-16 · Savat alohida /savat sahifasida, holat butun ilova uchun umumiy (SavatchaProvider) · pastki menyudagi Savat bo'limi uchun
+- 2026-11-16 · src/proxy.ts olib tashlandi; admin tekshiruvi klientda, ma'lumotni admin API himoyalaydi · proxy cookie'ga qaraydi, Telegram Mini App esa header bilan kiradi — Telegram'da Profil/Buyurtmalar/Admin kirish sahifasiga otib yuborardi
 - 2026-11-13 · Jarayon progress.html orqali kuzatiladi; sahifa hujjatlardan avtomatik yasaladi (`npm run progress`, `npm run dev` oldidan) · qo'lda yuritiladigan sahifa eskiradi, manba — sprint fayllari
 
 ## OCHIQ SAVOLLAR

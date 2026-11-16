@@ -1,131 +1,98 @@
 "use client";
 
-import { api } from "@/lib/api";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { sessiyaOzgardi } from "@/lib/sessiyaKlient";
+import { CircleHelp, IdCard, MapPin, ShieldCheck, ShoppingBag, User, Wallet } from "lucide-react";
+import { api } from "@/lib/api";
+import { somFormat, type Zakaz } from "@/lib/turlar";
+import { FaolBuyurtma, TarixKartasi, faolmi } from "@/components/ZakazKartalari";
+import { IkonaQuti, Karta, MenyuGuruhi, MenyuQatori, Tana } from "@/components/ui";
 
-type Manzil = { id: number; matn: string };
+type Men = { mijoz: { ism: string | null; telefon: string | null } | null; admin: boolean };
+
+// "+998901234567" -> "+998 90 123 45 67"
+const telefonKorinish = (t: string | null) =>
+  t?.replace(/^\+998(\d{2})(\d{3})(\d{2})(\d{2})$/, "+998 $1 $2 $3 $4") ?? "";
 
 export default function ProfilSahifasi() {
   const router = useRouter();
-  const [telefon, setTelefon] = useState<string | null>(null);
-  const [ism, setIsm] = useState("");
-  const [manzillar, setManzillar] = useState<Manzil[]>([]);
-  const [yangiManzil, setYangiManzil] = useState("");
-  const [xabar, setXabar] = useState<string | null>(null);
-  const [xato, setXato] = useState<string | null>(null);
+  const [men, setMen] = useState<Men | null>(null);
+  const [zakazlar, setZakazlar] = useState<Zakaz[] | null>(null);
 
   useEffect(() => {
     api("/api/men")
       .then((r) => r.json())
-      .then((d) => {
-        if (!d.mijoz) return router.replace("/kirish?qaytish=/profil");
-        setTelefon(d.mijoz.telefon);
-        setIsm(d.mijoz.ism ?? "");
-      });
-    api("/api/men/manzillar")
+      .then((d: Men) => (d.mijoz ? setMen(d) : router.replace("/kirish?qaytish=/profil")));
+    api("/api/men/zakazlar")
       .then((r) => (r.ok ? r.json() : []))
-      .then(setManzillar);
+      .then(setZakazlar);
   }, [router]);
 
-  const sorov = async (url: string, method: string, body?: object) => {
-    setXato(null);
-    setXabar(null);
-    const javob = await api(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: body ? JSON.stringify(body) : undefined,
-    });
-    const data = await javob.json();
-    if (!javob.ok) {
-      setXato(data.xato ?? "Xatolik yuz berdi");
-      return null;
-    }
-    return data;
-  };
-
-  const ismniSaqla = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (await sorov("/api/men", "PATCH", { ism })) {
-      setXabar("Ism saqlandi");
-      sessiyaOzgardi();
-    }
-  };
-
-  const manzilQosh = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const manzil = await sorov("/api/men/manzillar", "POST", { matn: yangiManzil });
-    if (manzil) {
-      setManzillar((m) => [...m, manzil]);
-      setYangiManzil("");
-    }
-  };
-
-  const manzilOchir = async (id: number) => {
-    if (await sorov(`/api/men/manzillar/${id}`, "DELETE")) setManzillar((m) => m.filter((x) => x.id !== id));
-  };
-
-  const chiq = async () => {
-    await api("/api/auth/chiqish", { method: "POST" });
-    sessiyaOzgardi();
-    router.push("/");
-  };
-
-  const maydon = "w-full rounded-lg border border-stone-300 px-3 py-2";
-  const tugma = "rounded-lg bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-700";
+  // Statistika — bekor qilinganlarsiz (maket: "Buyurtmalar" va "Jami")
+  const haqiqiy = (zakazlar ?? []).filter((z) => z.holat !== "BEKOR" && z.holat !== "TOLOV_KUTILMOQDA");
+  const jami = haqiqiy.reduce((s, z) => s + z.jamiSumma, 0);
+  const faol = zakazlar?.find(faolmi);
+  const tarix = (zakazlar ?? []).filter((z) => !faolmi(z)).slice(0, 2);
 
   return (
-    <main className="mx-auto w-full max-w-2xl space-y-5 px-4 py-6">
-      <h1 className="text-2xl font-bold">Profil</h1>
-      {xato && <p className="text-red-600">{xato}</p>}
-      {xabar && <p className="text-emerald-700">{xabar}</p>}
-
-      <form onSubmit={ismniSaqla} className="space-y-3 rounded-xl bg-white p-5 shadow-sm">
-        <div>
-          <div className="text-sm text-stone-500">Telefon</div>
-          <div className="font-medium">{telefon ?? "..."}</div>
-        </div>
-        <label className="block">
-          <span className="mb-1 block text-sm text-stone-500">Ism</span>
-          <div className="flex gap-2">
-            <input value={ism} onChange={(e) => setIsm(e.target.value)} className={maydon} placeholder="Ismingiz" />
-            <button type="submit" className={tugma}>
-              Saqlash
-            </button>
+    <>
+      <header className="rounded-b-3xl bg-asosiy px-5 pb-7 pt-5 text-white">
+        <h1 className="text-center text-xl font-bold">Profil</h1>
+        <div className="mt-5 flex items-center gap-4">
+          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-white text-asosiy">
+            <User size={30} strokeWidth={1.8} />
+          </span>
+          <div className="min-w-0">
+            <div className="truncate text-xl font-bold">{men?.mijoz?.ism || "Mijoz"}</div>
+            <div className="text-white/90">{telefonKorinish(men?.mijoz?.telefon ?? null) || "..."}</div>
           </div>
-        </label>
-      </form>
+        </div>
+      </header>
 
-      <section className="space-y-3 rounded-xl bg-white p-5 shadow-sm">
-        <h2 className="font-semibold">Yetkazish manzillari</h2>
-        {manzillar.length === 0 && <p className="text-stone-500">Saqlangan manzil yo&apos;q.</p>}
-        <ul className="divide-y divide-stone-100">
-          {manzillar.map((m) => (
-            <li key={m.id} className="flex items-center justify-between gap-3 py-2">
-              <span>{m.matn}</span>
-              <button onClick={() => manzilOchir(m.id)} className="text-sm text-red-600 hover:underline">
-                O&apos;chirish
-              </button>
-            </li>
-          ))}
-        </ul>
-        <form onSubmit={manzilQosh} className="flex gap-2">
-          <input
-            value={yangiManzil}
-            onChange={(e) => setYangiManzil(e.target.value)}
-            className={maydon}
-            placeholder="Ko'cha, uy, xonadon"
-          />
-          <button type="submit" className={tugma}>
-            Qo&apos;shish
-          </button>
-        </form>
-      </section>
+      <Tana className="space-y-5">
+        <div className="grid grid-cols-2 gap-3">
+          <Karta className="flex items-center gap-3">
+            <IkonaQuti ikona={ShoppingBag} />
+            <div>
+              <div className="text-sm text-stone-700">Buyurtmalar</div>
+              <div className="text-xl font-bold">{zakazlar ? haqiqiy.length : "…"}</div>
+            </div>
+          </Karta>
+          <Karta className="flex items-center gap-3">
+            <IkonaQuti ikona={Wallet} />
+            <div className="min-w-0">
+              <div className="text-sm text-stone-700">Jami</div>
+              <div className="truncate text-xl font-bold">{zakazlar ? somFormat(jami).replace(" so'm", "") : "…"}</div>
+            </div>
+          </Karta>
+        </div>
 
-      <button onClick={chiq} className="w-full rounded-lg border border-stone-300 py-3 text-stone-700 hover:bg-stone-100">
-        Chiqish
-      </button>
-    </main>
+        {faol && <FaolBuyurtma zakaz={faol} />}
+
+        {tarix.length > 0 && (
+          <section>
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-lg font-bold">Buyurtmalar tarixi</h2>
+              <Link href="/zakazlarim" className="text-sm font-medium text-asosiy">
+                Barchasini ko&apos;rish
+              </Link>
+            </div>
+            <div className="space-y-3">
+              {tarix.map((z) => (
+                <TarixKartasi key={z.id} zakaz={z} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        <MenyuGuruhi>
+          <MenyuQatori href="/profil/malumot" ikona={IdCard} matn="Ism va telefon" />
+          <MenyuQatori href="/profil/manzillar" ikona={MapPin} matn="Manzillarim" />
+          <MenyuQatori href="/yordam" ikona={CircleHelp} matn="Yordam" />
+          {men?.admin && <MenyuQatori href="/admin" ikona={ShieldCheck} matn="Admin" />}
+        </MenyuGuruhi>
+      </Tana>
+    </>
   );
 }

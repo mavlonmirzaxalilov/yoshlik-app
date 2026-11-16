@@ -41,7 +41,7 @@ export default function TaomDetali({ taomId, yopish, qoshish }: Props) {
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-md rounded-t-2xl bg-white p-5 shadow-xl sm:rounded-2xl"
       >
-        {xato && <p className="text-red-600">{xato}</p>}
+        {xato && <p className="text-qizil">{xato}</p>}
         {!taom && !xato && <p className="text-stone-500">Yuklanmoqda...</p>}
         {taom && (
           <>
@@ -52,14 +52,14 @@ export default function TaomDetali({ taomId, yopish, qoshish }: Props) {
             {taom.tavsif && <p className="mt-2 text-stone-600">{taom.tavsif}</p>}
             <p className="mt-3 text-lg font-semibold">{somFormat(taom.narx)}</p>
             {taom.tugadi ? (
-              <p className="mt-4 rounded-lg bg-stone-100 py-3 text-center text-stone-600">Hozircha tugagan</p>
+              <p className="mt-4 rounded-lg bg-shaftoli py-3 text-center text-stone-600">Hozircha tugagan</p>
             ) : (
               <button
                 onClick={() => {
                   qoshish(taom);
                   yopish();
                 }}
-                className="mt-4 w-full rounded-lg bg-emerald-600 py-3 font-semibold text-white hover:bg-emerald-700"
+                className="mt-4 w-full rounded-xl bg-asosiy py-3 font-semibold text-white hover:bg-asosiy-toq"
               >
                 Savatchaga qo&apos;shish
               </button>
