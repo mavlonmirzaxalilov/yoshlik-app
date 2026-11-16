@@ -10,6 +10,7 @@
 
 import { execFile } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createServer } from "node:net";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -35,26 +36,36 @@ public class YoshlikRaw {
   public class DOCINFO { public string pDocName; public string pOutputFile; public string pDataType; }
   [DllImport("winspool.drv", CharSet = CharSet.Unicode, SetLastError = true)] public static extern bool OpenPrinter(string n, out IntPtr h, IntPtr d);
   [DllImport("winspool.drv", SetLastError = true)] public static extern bool ClosePrinter(IntPtr h);
-  [DllImport("winspool.drv", CharSet = CharSet.Unicode, SetLastError = true)] public static extern bool StartDocPrinter(IntPtr h, int l, DOCINFO d);
+  [DllImport("winspool.drv", CharSet = CharSet.Unicode, SetLastError = true)] public static extern int StartDocPrinter(IntPtr h, int l, DOCINFO d);
   [DllImport("winspool.drv", SetLastError = true)] public static extern bool EndDocPrinter(IntPtr h);
   [DllImport("winspool.drv", SetLastError = true)] public static extern bool StartPagePrinter(IntPtr h);
   [DllImport("winspool.drv", SetLastError = true)] public static extern bool EndPagePrinter(IntPtr h);
   [DllImport("winspool.drv", SetLastError = true)] public static extern bool WritePrinter(IntPtr h, byte[] b, int n, out int w);
-  public static void Yubor(string printer, byte[] data) {
+  public static int Yubor(string printer, byte[] data) {
     IntPtr h;
     if (!OpenPrinter(printer, out h, IntPtr.Zero)) throw new Exception("Printer topilmadi: " + printer);
     try {
       var di = new DOCINFO { pDocName = "Yoshlik chek", pDataType = "RAW" };
-      if (!StartDocPrinter(h, 1, di)) throw new Exception("StartDocPrinter xato");
+      int job = StartDocPrinter(h, 1, di);
+      if (job == 0) throw new Exception("StartDocPrinter xato");
       StartPagePrinter(h);
       int w; bool ok = WritePrinter(h, data, data.Length, out w);
       EndPagePrinter(h); EndDocPrinter(h);
       if (!ok || w != data.Length) throw new Exception("WritePrinter xato");
+      return job;
     } finally { ClosePrinter(h); }
   }
 }
 "@
-[YoshlikRaw]::Yubor($Printer, [System.IO.File]::ReadAllBytes($Fayl))
+$job = [YoshlikRaw]::Yubor($Printer, [System.IO.File]::ReadAllBytes($Fayl))
+# Chek haqiqatan chiqqanini kutamiz: navbatdan ketmasa — printer javob bermayapti (port, kabel, qog'oz)
+for ($i = 0; $i -lt 40; $i++) {
+  Start-Sleep -Milliseconds 500
+  $j = Get-PrintJob -PrinterName $Printer -ID $job -ErrorAction SilentlyContinue
+  if (-not $j) { exit 0 }
+}
+Remove-PrintJob -PrinterName $Printer -ID $job -ErrorAction SilentlyContinue
+throw "Printer 20 soniyada chop etmadi - ulanganini, qog'ozini va Windows'dagi portini tekshiring"
 `,
 );
 
@@ -195,6 +206,16 @@ if (buyruq === "sinov") {
 }
 
 // ---------- Asosiy sikl ----------
+
+// Bitta nusxa: ikkinchi dastur ochilsa cheklar ikki marta chiqadi
+await new Promise((ok) => {
+  const qulf = createServer();
+  qulf.once("error", () => {
+    console.log("Chek dasturi allaqachon ishlayapti (boshqa oynada). Bu oyna yopiladi.");
+    process.exit(3);
+  });
+  qulf.listen(47615, "127.0.0.1", ok);
+});
 
 const sarlavha = { Authorization: `Bearer ${s.kalit}` };
 let oxirgiXato = "";

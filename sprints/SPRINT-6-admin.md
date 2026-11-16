@@ -34,6 +34,7 @@
 - 2026-11-16: kompyuterda kirish — raqam ulashilmagan bo'lsa botga havola (/start admin) va avtomatik qayta tekshirish, "Siz admin emassiz" (src/components/admin/TelegramKirish.tsx, src/lib/botOqimi.ts)
 - 2026-11-16: kompyuterda kirish faqat bot orqali — Telegram Login oynasi olib tashlandi; sahifa so'rov ochadi (tugma + QR), botda /start k_<id> → raqam → "Kirishni tasdiqlash", ro'yxatda bo'lmasa "Siz admin emassiz"; lokal sinovdan o'tdi (src/lib/botKirish.ts, src/app/api/auth/bot-kirish, src/components/admin/TelegramKirish.tsx)
 - 2026-11-16: chek printeri — bot zakazi to'langanda oshxona va kassa cheki (80 mm, ESC/POS), dastur public/chek, kalit va holat Sozlamalarda, Zakazlar kartasida "Qayta"; printersiz (FAYL) rejimda lokal sinovdan o'tdi (src/lib/chek.ts, src/app/api/chek, public/chek)
+- 2026-11-16: chek dasturi — chek printerdan chiqqanini kutib tekshiradi (chiqmasa belgilamaydi), bitta nusxa himoyasi; sabab: Windows'da printerlar noto'g'ri portda edi (public/chek)
 
 ## Handoff
 
