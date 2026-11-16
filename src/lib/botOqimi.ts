@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { telefonniTozala } from "@/lib/auth";
+import { telefonniTozala, xodimRoli } from "@/lib/auth";
 import { miniAppUrl, xabarYubor, type TelegramUser } from "@/lib/telegram";
 
 // Bot oqimi (foydalanuvchi belgilagan tartib, DECISIONS.md):
@@ -29,6 +29,21 @@ const xushKelibsiz = async (chatId: number) => {
     reply_markup: { inline_keyboard: [[{ text: "🍽 Taom buyurtma qilish", web_app: { url: miniAppUrl() } }]] },
   });
 };
+
+const ROL_NOMI = { ADMIN: "admin", KASSIR: "kassir", OSHPAZ: "oshpaz" } as const;
+
+/** Xodim bo'lsa — boshqaruv paneli havolasi bilan xabar; bo'lmasa (faqat admin so'rovida) — "admin emassiz". */
+async function xodimHolati(chatId: number, telefon: string, adminSorovi: boolean) {
+  const { rol } = await xodimRoli(telefon);
+  if (rol) {
+    const panel = `${miniAppUrl().replace(/\/$/, "")}/admin`;
+    const matn = `🔐 Siz <b>${ROL_NOMI[rol]}</b> sifatida ro'yxatdasiz.\nKompyuterdagi kirish sahifasi o'zi ochiladi (yoki pastdagi tugma).`;
+    return xabarYubor(chatId, matn, {
+      reply_markup: { inline_keyboard: [[{ text: "🔐 Boshqaruv paneli", web_app: { url: panel } }]] },
+    });
+  }
+  if (adminSorovi) return xabarYubor(chatId, "⛔️ Siz admin emassiz. Raqamingiz xodimlar ro'yxatida yo'q.");
+}
 
 /** Telegram'dan kelgan raqamni mijozga yozadi; veb orqali shu raqam bilan yaratilgan mijoz bo'lsa birlashtiradi. */
 async function raqamniSaqla(tgUser: TelegramUser, telefon: string): Promise<"ok" | "band"> {
@@ -79,11 +94,16 @@ export async function botXabari(x: Xabar) {
     if (natija === "band") {
       return xabarYubor(chatId, "Bu raqam boshqa Telegram akkauntiga bog'langan. Kafe administratoriga murojaat qiling.");
     }
-    return xushKelibsiz(chatId);
+    await xushKelibsiz(chatId);
+    // Xodim bo'lsa rolini ham aytamiz (oddiy mijozga qo'shimcha xabar yo'q;
+    // kompyuterdagi kirish sahifasi "Siz admin emassiz"ni o'zi ko'rsatadi)
+    return xodimHolati(chatId, telefon, false);
   }
 
+  const adminSorovi = x.text?.trim() === "/start admin";
   const mijoz = await prisma.mijoz.findUnique({ where: { telegramId: BigInt(x.from.id) } });
   if (!mijoz?.telefon) return raqamSora(chatId);
+  if (adminSorovi) return xodimHolati(chatId, mijoz.telefon, true);
   if (x.text?.startsWith("/start")) {
     return xabarYubor(chatId, "<b>Xush kelibsiz!</b>\nYoshlik kafesi — navbatsiz, issiq ovqat.", {
       reply_markup: { inline_keyboard: [[{ text: "🍽 Taom buyurtma qilish", web_app: { url: miniAppUrl() } }]] },

@@ -30,6 +30,7 @@
 
 <!-- hisobotchi to'ldiradi -->
 - 2026-11-16: POS uslubidagi admin panel — Kassa, Zakazlar doskasi, Menyu (Blob rasm), Hisobotlar, Harajatlar, Xodimlar (rollar), Promokodlar, Sozlamalar; Telegram Login; lokal sinovdan o'tdi (src/app/admin, src/components/admin, src/app/api/admin, src/lib/auth.ts)
+- 2026-11-16: kompyuterda kirish — raqam ulashilmagan bo'lsa botga havola (/start admin) va avtomatik qayta tekshirish, "Siz admin emassiz" (src/components/admin/TelegramKirish.tsx, src/lib/botOqimi.ts)
 
 ## Handoff
 
