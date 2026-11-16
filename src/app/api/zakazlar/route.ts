@@ -65,7 +65,7 @@ export async function POST(request: Request) {
   if (usul === "YETKAZISH") {
     const manzil = body.yetkazish?.manzil?.trim().slice(0, 200) ?? "";
     if (manzil.length < 5) return xato("Yetkazish manzilini yozing");
-    const n = yetkazishHisobla(body.yetkazish?.lat, body.yetkazish?.lng, taomlarSumma);
+    const n = await yetkazishHisobla(body.yetkazish?.lat, body.yetkazish?.lng, taomlarSumma);
     if (!n.mumkin) return xato(n.sabab);
     yetkazish = { narx: n.narx, km: n.km, manzil, lat: body.yetkazish!.lat!, lng: body.yetkazish!.lng! };
   }

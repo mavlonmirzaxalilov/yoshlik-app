@@ -1,16 +1,19 @@
 // Yetkazish narxi: kafe nuqtasidan to'g'ri chiziq masofasi (haversine).
-// Tarif va kafe nuqtasi .env'dan — hozircha test qiymatlar (DECISIONS.md).
+// Tarif va kafe nuqtasi admin "Sozlamalar"idan, bo'lmasa .env'dan (src/lib/sozlamalar.ts).
+import { sozlamalar } from "@/lib/sozlamalar";
 
-const son = (nom: string) => Number(process.env[nom]);
-
-export const yetkazishSozlamalari = () => ({
-  kafeLat: son("KAFE_LAT"),
-  kafeLng: son("KAFE_LNG"),
-  bazaviy: son("YETKAZISH_BAZAVIY"),
-  kmNarxi: son("YETKAZISH_KM_NARXI"),
-  radiusKm: son("YETKAZISH_RADIUS_KM"),
-  minSumma: son("YETKAZISH_MIN_SUMMA"),
-});
+export async function yetkazishSozlamalari() {
+  const s = await sozlamalar();
+  const son = (v: string) => (v === "" ? NaN : Number(v));
+  return {
+    kafeLat: son(s.KAFE_LAT),
+    kafeLng: son(s.KAFE_LNG),
+    bazaviy: son(s.YETKAZISH_BAZAVIY),
+    kmNarxi: son(s.YETKAZISH_KM_NARXI),
+    radiusKm: son(s.YETKAZISH_RADIUS_KM),
+    minSumma: son(s.YETKAZISH_MIN_SUMMA),
+  };
+}
 
 function masofaKm(lat1: number, lng1: number, lat2: number, lng2: number) {
   const r = (g: number) => (g * Math.PI) / 180;
@@ -24,8 +27,8 @@ export type YetkazishNatija =
   | { mumkin: false; km: number | null; sabab: string };
 
 /** taomlarSumma — chegirmadan oldingi summa (minimal summa shunga qarab tekshiriladi). */
-export function yetkazishHisobla(lat: unknown, lng: unknown, taomlarSumma: number): YetkazishNatija {
-  const s = yetkazishSozlamalari();
+export async function yetkazishHisobla(lat: unknown, lng: unknown, taomlarSumma: number): Promise<YetkazishNatija> {
+  const s = await yetkazishSozlamalari();
   if (Object.values(s).some((v) => !Number.isFinite(v))) {
     return { mumkin: false, km: null, sabab: "Yetkazish sozlanmagan" };
   }

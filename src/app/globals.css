@@ -26,6 +26,14 @@
   --color-yashil-fon: #dcefe3;
   --color-qizil: #b4232a;
   --color-qizil-fon: #fbe3e4;
+  /* Admin panel (POS uslubi): to'q ko'k menyu, ko'k faol holat, yashil to'lov */
+  --color-panel: #13223f;
+  --color-panel-och: #1c3058;
+  --color-faol: #2f6fed;
+  --color-faol-och: #e8efff;
+  --color-tolov: #1aa64e;
+  --color-tolov-toq: #158a40;
+  --color-admin-fon: #eef2f8;
   --radius-karta: 1rem;
   --shadow-karta: 0 1px 2px rgb(0 0 0 / 0.04), 0 2px 8px rgb(0 0 0 / 0.04);
 }

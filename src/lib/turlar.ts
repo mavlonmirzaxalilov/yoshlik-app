@@ -9,7 +9,7 @@ export const OLISH_USULLARI: { qiymat: OlishUsuli; nom: string }[] = [
   { qiymat: "YETKAZISH", nom: "Yetkazib berish" },
 ];
 
-export type TolovUsuli = "CLICK" | "PAYME" | "NAQD" | "KASSA";
+export type TolovUsuli = "CLICK" | "PAYME" | "NAQD" | "KASSA" | "KARTA";
 
 // Zal va olib ketish — faqat oldindan onlayn; yetkazishda kuryerga naqd ham mumkin (DECISIONS.md).
 export const tolovUsullari = (usul: OlishUsuli): { qiymat: TolovUsuli; nom: string }[] => [
@@ -19,7 +19,7 @@ export const tolovUsullari = (usul: OlishUsuli): { qiymat: TolovUsuli; nom: stri
 ];
 
 export const tolovNomi = (u: TolovUsuli | null) =>
-  ({ CLICK: "Click", PAYME: "Payme", NAQD: "Kuryerga naqd", KASSA: "Kassada" })[u ?? "KASSA"] ?? "—";
+  ({ CLICK: "Click", PAYME: "Payme", NAQD: "Naqd", KASSA: "Kassada", KARTA: "Karta" })[u ?? "KASSA"] ?? "—";
 
 export type Kategoriya = { id: number; nom: string; belgi: string; tartib: number };
 

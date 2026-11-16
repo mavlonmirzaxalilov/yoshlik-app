@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 
 // Telegram Bot API va Mini App initData tekshiruvi.
 // Token faqat .env'da (TELEGRAM_BOT_TOKEN) — kodga yoki logga yozilmaydi.
@@ -38,6 +38,34 @@ export const xabarYubor = (chatId: number | bigint, matn: string, qoshimcha: obj
 export type TelegramUser = { id: number; first_name?: string; last_name?: string; username?: string };
 
 const INIT_DATA_MUDDATI_SONIYA = 24 * 60 * 60;
+
+/**
+ * Telegram Login Widget ma'lumotini tekshiradi (kompyuterda admin kirishi).
+ * Telegram hujjati: secret = SHA256(bot_token); hash = HMAC_SHA256(key=secret, msg=data_check_string).
+ */
+export function loginWidgetTekshir(data: Record<string, unknown>, botToken = token()): TelegramUser | null {
+  if (!botToken || typeof data.hash !== "string") return null;
+  const maydonlar = Object.entries(data)
+    .filter(([k, v]) => k !== "hash" && v !== undefined && v !== null)
+    .map(([k, v]) => [k, String(v)] as const)
+    .sort(([a], [b]) => a.localeCompare(b));
+  const dataCheckString = maydonlar.map(([k, v]) => `${k}=${v}`).join("\n");
+  const secret = createHash("sha256").update(botToken).digest();
+  const kutilgan = createHmac("sha256", secret).update(dataCheckString).digest();
+  const kelgan = Buffer.from(data.hash, "hex");
+  if (kelgan.length !== kutilgan.length || !timingSafeEqual(kelgan, kutilgan)) return null;
+
+  const authDate = Number(data.auth_date);
+  if (!authDate || Date.now() / 1000 - authDate > INIT_DATA_MUDDATI_SONIYA) return null;
+  const id = Number(data.id);
+  if (!Number.isInteger(id)) return null;
+  return {
+    id,
+    first_name: typeof data.first_name === "string" ? data.first_name : undefined,
+    last_name: typeof data.last_name === "string" ? data.last_name : undefined,
+    username: typeof data.username === "string" ? data.username : undefined,
+  };
+}
 
 /**
  * Mini App initData imzosini tekshiradi (Telegram hujjati: "Validating data received via the Mini App").

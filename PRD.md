@@ -52,7 +52,7 @@ Oshxona jamoasi (3 oshpaz, 2 yordamchi) va kuryer tizimda rol emas — admin ula
 
 1. **Menyu va savatcha** — kategoriyalar, taom kartasi (nom, narx, rasm, tavsif, hajm), savatcha, promokod.
 2. **Zakaz va to'lov** — uch olish usuli, olish vaqti, km bo'yicha yetkazish narxi, Click va Payme orqali onlayn to'lov, holat xabarlari, bekor qilish va avtomatik pul qaytarish.
-3. **Admin panel** — zakazlar oqimi va holatlar (olish vaqti bo'yicha tartiblangan), menyu boshqaruvi ("tugadi" belgisi bilan), hisobot.
+3. **Admin panel (POS uslubida)** — Kassa (kassir zakazi, naqd/karta), Harajatlar, Xodimlar (Admin/Kassir/Oshpaz), Sozlamalar (2026-11-16 qo'shildi); zakazlar oqimi va holatlar (olish vaqti bo'yicha tartiblangan), menyu boshqaruvi ("tugadi" belgisi bilan), hisobot.
 
 ## 7. Ma'lumot modeli
 
@@ -109,7 +109,6 @@ Oshxona jamoasi (3 oshpaz, 2 yordamchi) va kuryer tizimda rol emas — admin ula
 - Yetkazish raqamlari: bazaviy narx, km narxi, maksimal radius, minimal summa (hozir test qiymatlar) — ishga tushirishdan oldin
 - Kafe koordinatasi (hozir test nuqta) — ishga tushirishdan oldin
 - Click/Payme merchant akkaunti va kalitlari (hozir test to'lov) — ishga tushirishdan oldin
-- Hisobot tarkibi — S6
 - Kuryerlar soni — ishga tushirishdan oldin
 
 **Tekshiriladigan faktlar**
@@ -120,6 +119,8 @@ Oshxona jamoasi (3 oshpaz, 2 yordamchi) va kuryer tizimda rol emas — admin ula
 - Reklama byudjeti (Instagram, Telegram kanal) va ilmoq — S5 dan oldin
 
 ## 10. V1'ga kirmaydiganlar
+
+- Ombor (xomashyo qoldig'i) — keyinga qoldirildi (2026-11-16)
 
 - Fiskal chek va soliq integratsiyasi (v2)
 - Kuryer ilovasi yoki roli, kuryer kuzatuvi

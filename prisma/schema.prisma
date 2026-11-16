@@ -70,8 +70,17 @@ model Zakaz {
   mijoz           Mijoz?        @relation(fields: [mijozId], references: [id])
   promokodId      Int?
   promokod        Promokod?     @relation(fields: [promokodId], references: [id])
+  manba           ZakazManbasi  @default(ONLAYN) // bot/ilova yoki kassa
+  xodimId         Int? // kassada kiritgan xodim
+  xodim           Admin?        @relation(fields: [xodimId], references: [id])
+  bekorSababi     String? // admin bekor qilganda
   qatorlar        ZakazQatori[]
   tolovlar        Tolov[]
+}
+
+enum ZakazManbasi {
+  ONLAYN
+  KASSA
 }
 
 // Zakazdagi har bir taom. nom va narx — zakaz paytidagi nusxa (narx keyin o'zgarsa ham saqlanadi).
@@ -134,6 +143,7 @@ enum TolovUsuli {
   PAYME
   NAQD
   KASSA
+  KARTA // kassa terminali
 }
 
 enum TolovHolati {
@@ -167,9 +177,49 @@ model Promokod {
 }
 
 // Admin telefon raqami bo'yicha aniqlanadi (S3); Telegram ID S6'da ishlatiladi.
+// Xodim (jadval nomi tarixiy: Admin). Rol bo'yicha admin panelga kiradi; telefoni orqali mijoz akkauntiga bog'lanadi.
+// Vercel'dagi ADMIN_TELEFONLAR — egalar, doim ADMIN (jadvalda bo'lmasa ham).
 model Admin {
-  id         Int     @id @default(autoincrement())
-  telegramId BigInt? @unique
-  telefon    String? @unique
+  id         Int        @id @default(autoincrement())
+  telegramId BigInt?    @unique
+  telefon    String?    @unique
   ism        String?
+  rol        XodimRoli  @default(ADMIN)
+  faol       Boolean    @default(true)
+  yaratilgan DateTime   @default(now())
+  zakazlar   Zakaz[]
+  harajatlar Harajat[]
+}
+
+enum XodimRoli {
+  ADMIN
+  KASSIR
+  OSHPAZ
+}
+
+enum HarajatTurkumi {
+  MAHSULOT
+  ISH_HAQI
+  KOMMUNAL
+  IJARA
+  BOSHQA
+}
+
+model Harajat {
+  id         Int            @id @default(autoincrement())
+  sana       DateTime // kun (Toshkent kuni boshi)
+  summa      Int
+  turkum     HarajatTurkumi
+  izoh       String?
+  xodimId    Int?
+  xodim      Admin?         @relation(fields: [xodimId], references: [id], onDelete: SetNull)
+  yaratilgan DateTime       @default(now())
+
+  @@index([sana])
+}
+
+// Admin paneldan o'zgartiriladigan sozlamalar (bo'sh bo'lsa .env qiymati ishlatiladi).
+model Sozlama {
+  kalit  String @id
+  qiymat String
 }

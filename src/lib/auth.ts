@@ -75,10 +75,15 @@ export async function otpTekshir(telefon: string, kod: string) {
     create: { telefon, roziVaqti: new Date() },
   });
 
+  await sessiyaOch(mijoz.id);
+  return mijoz;
+}
+
+/** Sessiya ochadi va httpOnly cookie qo'yadi (OTP va Telegram Login uchun umumiy). */
+export async function sessiyaOch(mijozId: number) {
   const token = randomBytes(32).toString("base64url");
   const muddati = new Date(Date.now() + SESSIYA_KUN * 86_400_000);
-  await prisma.sessiya.create({ data: { id: xesh(token), mijozId: mijoz.id, muddati } });
-
+  await prisma.sessiya.create({ data: { id: xesh(token), mijozId, muddati } });
   (await cookies()).set(SESSIYA_COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
@@ -86,7 +91,6 @@ export async function otpTekshir(telefon: string, kod: string) {
     path: "/",
     expires: muddati,
   });
-  return mijoz;
 }
 
 export async function chiqish() {
@@ -96,9 +100,14 @@ export async function chiqish() {
   jar.delete(SESSIYA_COOKIE);
 }
 
+export type Rol = "ADMIN" | "KASSIR" | "OSHPAZ";
+
 export type Foydalanuvchi = {
   mijoz: { id: number; ism: string | null; telefon: string | null };
-  admin: boolean;
+  rol: Rol | null; // xodim roli; mijoz bo'lsa null
+  xodimId: number | null; // Admin jadvalidagi yozuv (egalar uchun bo'lmasligi mumkin)
+  ega: boolean; // ADMIN_TELEFONLAR'da — o'chirib bo'lmaydigan ega
+  admin: boolean; // rol === "ADMIN" (eski kod uchun)
 };
 
 const MIJOZ_MAYDONLARI = { id: true, ism: true, telefon: true } as const;
@@ -110,10 +119,24 @@ const envAdminlar = () =>
     .map((t) => telefonniTozala(t.trim()))
     .filter(Boolean);
 
+export const egami = (telefon: string | null) => Boolean(telefon && envAdminlar().includes(telefon));
+
+/** Telefon bo'yicha xodim roli: egalar doim ADMIN; jadvaldagi faol xodim — o'z roli. */
+export async function xodimRoli(telefon: string | null) {
+  if (!telefon) return { rol: null, xodimId: null, ega: false } as const;
+  const ega = egami(telefon);
+  const x = await prisma.admin.findUnique({ where: { telefon }, select: { id: true, rol: true, faol: true } });
+  const rol: Rol | null = ega ? "ADMIN" : x?.faol ? x.rol : null;
+  return { rol, xodimId: x?.id ?? null, ega };
+}
+
 export async function adminmi(telefon: string | null) {
-  if (!telefon) return false;
-  if (envAdminlar().includes(telefon)) return true;
-  return (await prisma.admin.count({ where: { telefon } })) > 0;
+  return (await xodimRoli(telefon)).rol === "ADMIN";
+}
+
+async function toldir(mijoz: Foydalanuvchi["mijoz"]): Promise<Foydalanuvchi> {
+  const r = await xodimRoli(mijoz.telefon);
+  return { mijoz, ...r, admin: r.rol === "ADMIN" };
 }
 
 /** Telegram foydalanuvchisi bo'yicha mijozni topadi yoki yaratadi (telefon keyin bot orqali keladi). */
@@ -137,8 +160,7 @@ export async function joriyFoydalanuvchi(): Promise<Foydalanuvchi | null> {
   if (auth?.startsWith("tma ")) {
     const user = initDataTekshir(auth.slice(4));
     if (!user) return null;
-    const mijoz = await telegramMijoz(user);
-    return { mijoz, admin: await adminmi(mijoz.telefon) };
+    return toldir(await telegramMijoz(user));
   }
 
   const token = (await cookies()).get(SESSIYA_COOKIE)?.value;
@@ -148,15 +170,21 @@ export async function joriyFoydalanuvchi(): Promise<Foydalanuvchi | null> {
     include: { mijoz: { select: MIJOZ_MAYDONLARI } },
   });
   if (!sessiya || sessiya.muddati < new Date()) return null;
-  return { mijoz: sessiya.mijoz, admin: await adminmi(sessiya.mijoz.telefon) };
+  return toldir(sessiya.mijoz);
 }
 
 export const javobXato = (xabar: string, status = 400) => Response.json({ xato: xabar }, { status });
 
-/** API yo'llari uchun: kirmagan bo'lsa 401 javobini qaytaradi. */
-export async function talabQil(adminKerak = false) {
+/**
+ * API yo'llari uchun: kirmagan bo'lsa 401, ruxsat yo'q bo'lsa 403.
+ * talabQil() — har kim; talabQil(true) — faqat ADMIN; talabQil(["ADMIN","KASSIR"]) — sanalgan rollar.
+ */
+export async function talabQil(ruxsat: boolean | Rol[] = false) {
   const f = await joriyFoydalanuvchi();
   if (!f) return { xato: javobXato("Avval tizimga kiring", 401) } as const;
-  if (adminKerak && !f.admin) return { xato: javobXato("Ruxsat yo'q", 403) } as const;
+  const rollar: Rol[] | null = ruxsat === true ? ["ADMIN"] : Array.isArray(ruxsat) ? ruxsat : null;
+  if (rollar && (!f.rol || !rollar.includes(f.rol))) return { xato: javobXato("Ruxsat yo'q", 403) } as const;
   return { f } as const;
 }
+
+export const XODIMLAR: Rol[] = ["ADMIN", "KASSIR", "OSHPAZ"];

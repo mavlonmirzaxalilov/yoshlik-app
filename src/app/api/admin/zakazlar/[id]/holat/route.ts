@@ -1,11 +1,11 @@
 import { holatXabari } from "@/lib/xabar";
 import { prisma } from "@/lib/prisma";
-import { javobXato, talabQil } from "@/lib/auth";
+import { javobXato, talabQil, XODIMLAR } from "@/lib/auth";
 import { HOLAT_NOMLARI, keyingiHolat, type ZakazHolati } from "@/lib/holatlar";
 
 // PATCH /api/admin/zakazlar/[id]/holat — { holat } — zakazni faqat keyingi holatga o'tkazish
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const t = await talabQil(true);
+  const t = await talabQil(XODIMLAR);
   if (t.xato) return t.xato;
   const id = Number((await params).id);
   const body = await request.json().catch(() => ({}));

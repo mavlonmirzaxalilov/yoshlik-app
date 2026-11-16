@@ -5,5 +5,5 @@ import { yetkazishHisobla } from "@/lib/yetkazish";
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
   const summa = Number.isFinite(body.summa) ? Number(body.summa) : 0;
-  return Response.json(yetkazishHisobla(body.lat, body.lng, summa));
+  return Response.json(await yetkazishHisobla(body.lat, body.lng, summa));
 }

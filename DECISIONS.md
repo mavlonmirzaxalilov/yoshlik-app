@@ -58,6 +58,15 @@ Format: `sana · qaror · sabab`
 - 2026-11-16 · Maketdan "Til" va ⚙️ olib tashlandi, "Manzillarim" qo'shildi, bosqichlar holatlarimizga moslandi, "Yordam"da kafe telefoni va admin Telegram (KAFE_TELEFON, KAFE_TELEGRAM) · PRD'da faqat o'zbek tili, sozlama yo'q; foydalanuvchi rozi bo'ldi
 - 2026-11-16 · Savat alohida /savat sahifasida, holat butun ilova uchun umumiy (SavatchaProvider) · pastki menyudagi Savat bo'limi uchun
 - 2026-11-16 · src/proxy.ts olib tashlandi; admin tekshiruvi klientda, ma'lumotni admin API himoyalaydi · proxy cookie'ga qaraydi, Telegram Mini App esa header bilan kiradi — Telegram'da Profil/Buyurtmalar/Admin kirish sahifasiga otib yuborardi
+- 2026-11-16 · Admin panel yoshlik-app ichida /admin (eski yoshlik-admin repo — Vite + Supabase — o'rniga), POS uslubida: chapda to'q ko'k menyu, rasmli taomlar to'ri, o'ngda buyurtma paneli · foydalanuvchi qarori; bitta baza, API va deploy
+- 2026-11-16 · Admin bo'limlari: Kassa, Zakazlar, Menyu, Hisobotlar, Harajatlar, Xodimlar, Promokodlar, Sozlamalar; Ombor kechiktirildi, stol tanlovi yo'q · foydalanuvchi qarori (PRD: o'z-o'ziga xizmat)
+- 2026-11-16 · Rollar: Admin (hammasi), Kassir (Kassa, Zakazlar, "tugadi"), Oshpaz (Zakazlar — holat); ADMIN_TELEFONLAR — o'chirib bo'lmaydigan egalar · foydalanuvchi qarori
+- 2026-11-16 · Kassa: kassir zakaz kiritadi, naqd yoki karta (terminal), zakaz darhol "to'landi", manba=KASSA, qaytim hisoblanadi · foydalanuvchi qarori
+- 2026-11-16 · Harajatlar tayyor turkumlar bilan (Mahsulot, Ish haqi, Kommunal, Ijara, Boshqa); hisobotda foyda = savdo − harajat · foydalanuvchi qarori
+- 2026-11-16 · Hisobot: savdo, soni, o'rtacha chek, olish usuli, to'lov turi, manba, top-5 taom, bekorlar, harajat, foyda, kunlik grafik · PRD'dagi "hisobot tarkibi" savoli yopildi
+- 2026-11-16 · Kompyuterda kirish — Telegram Login Widget (BotFather /setdomain kerak); Mini App ichida — hozirgidek · SMS yo'q, xodimlar baribir Telegram'da
+- 2026-11-16 · Sozlamalar (kafe aloqasi, koordinata, yetkazish tarifi) bazadagi Sozlama jadvalida, bo'sh bo'lsa .env · kafe egasi Vercel'ga kirmasdan o'zgartira olsin
+- 2026-11-16 · Taom rasmlari Vercel Blob'da (ochiq store), JPG/PNG/WebP ≤ 2 MB; lokalda yuklash o'chiq · production omboriga lokal sinovdan yozilmasin
 - 2026-11-13 · Jarayon progress.html orqali kuzatiladi; sahifa hujjatlardan avtomatik yasaladi (`npm run progress`, `npm run dev` oldidan) · qo'lda yuritiladigan sahifa eskiradi, manba — sprint fayllari
 
 ## OCHIQ SAVOLLAR
