@@ -1,3 +1,4 @@
+import { holatXabari } from "@/lib/xabar";
 import { prisma } from "@/lib/prisma";
 import { javobXato, talabQil } from "@/lib/auth";
 import { BEKOR_MUMKIN, type ZakazHolati } from "@/lib/holatlar";
@@ -37,5 +38,6 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
   if (!natija) return javobXato("Zakaz tayyorlanmoqda — endi bekor qilib bo'lmaydi");
   // Click/Payme ulanganda: qaytarish xato bersa admin qo'lda qaytaradi (PRD: nizo — admin)
   for (const tolov of tolangan) await pulniQaytar(tolov.id);
+  await holatXabari(id, tolangan.length ? "Pul kartangizga qaytariladi." : undefined);
   return Response.json({ ok: true, qaytarildi: tolangan.length > 0 });
 }

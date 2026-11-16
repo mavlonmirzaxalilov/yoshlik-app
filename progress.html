@@ -78,15 +78,15 @@
       <p class="xira" style="margin:0">Loyiha jarayoni</p>
       <h1>Yoshlik — onlayn zakaz</h1>
     </div>
-    <p class="xira" style="margin:0">Yangilangan: 13-noy, 2026, 12:35</p>
+    <p class="xira" style="margin:0">Yangilangan: 16-noy, 2026, 11:15</p>
   </header>
 
   <section class="umumiy" aria-label="Umumiy holat">
     <div class="karta">
       <div class="xira">Umumiy progress</div>
-      <div class="raqam">62%</div>
-      <div class="chiziq"><span style="width:62%"></span></div>
-      <div class="son">24/39 task</div>
+      <div class="raqam">74%</div>
+      <div class="chiziq"><span style="width:74%"></span></div>
+      <div class="son">29/39 task</div>
     </div>
     <div class="karta"><div class="xira">Sprintlar</div><div class="raqam">3/6</div><div class="son">tugadi</div></div>
     <div class="karta"><div class="xira">Joriy sprint</div><div class="raqam">S4</div><div class="son">chuqurlik</div></div>
@@ -151,8 +151,8 @@
     </div>
     <h3>telegram</h3>
     <p class="savol">Qo'lda turadimi?</p>
-    <div class="chiziq" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span style="width:0%"></span></div>
-    <p class="son">0/6 task</p>
+    <div class="chiziq" role="progressbar" aria-valuenow="83" aria-valuemin="0" aria-valuemax="100"><span style="width:83%"></span></div>
+    <p class="son">5/6 task</p>
   </article>
   <article class="sprint kutilmoqda">
     <div class="sprint-bosh">
@@ -269,10 +269,10 @@
   </section>
 
   <h2>So'nggi qarorlar</h2>
-  <section class="karta jadval"><table><tr><td class="sana">2026-11-13</td><td><strong>Jarayon progress.html orqali kuzatiladi; sahifa hujjatlardan avtomatik yasaladi (<code>npm run progress</code>, <code>npm run dev</code> oldidan)</strong><div class="xira">qo'lda yuritiladigan sahifa eskiradi, manba — sprint fayllari</div></td></tr><tr><td class="sana">2026-11-13</td><td><strong>Bekor qilishda avval holat shartli o'zgartiriladi, pul keyin qaytariladi; admin faqat keyingi holatga o'tkaza oladi</strong><div class="xira">admin va mijoz bir vaqtda bossa to'qnashuv bo'lmasin</div></td></tr><tr><td class="sana">2026-11-13</td><td><strong>Promokod foizli, chegirma faqat taomlar summasiga; bekor qilinsa ishlatish qaytariladi</strong><div class="xira">foydalanuvchi qarori</div></td></tr><tr><td class="sana">2026-11-13</td><td><strong>Yetkazish narxi = bazaviy + yaxlitlangan km × km narxi, masofa brauzer geolokatsiyasidan to'g'ri chiziq; tarif va kafe nuqtasi vaqtincha test qiymatlar (.env)</strong><div class="xira">foydalanuvchi qarori, haqiqiy raqamlar keyin</div></td></tr><tr><td class="sana">2026-11-13</td><td><strong>Olish vaqtiga zakaz limiti yo'q; vaqt uchala usulda majburiy, o'tgan vaqt (Toshkent vaqti) rad etiladi</strong><div class="xira">foydalanuvchi qarori</div></td></tr><tr><td class="sana">2026-11-13</td><td><strong>Holatlar: TOLOV_KUTILMOQDA → TOLANDI / QABUL_QILINDI (naqd) → TAYYORLANMOQDA → TAYYOR → YOLDA (yetkazish) → BERILDI; BEKOR</strong><div class="xira">PRD zanjiri + to'lovdan oldingi va naqd holatlari</div></td></tr><tr><td class="sana">2026-11-13</td><td><strong>Zal va olib ketish faqat oldindan onlayn; yetkazishda onlayn yoki kuryerga naqd</strong><div class="xira">foydalanuvchi qarori; kassa to'lovi savoli yopildi</div></td></tr><tr><td class="sana">2026-11-13</td><td><strong>Click/Payme kalitlari yo'q — vaqtincha test to'lov sahifasi (<code>TOLOV_REJIM=test</code>); provayder <code>src/lib/tolov.ts</code> interfeysiga keyin ulanadi</strong><div class="xira">oqim to'liq ishlaydi, productionda test o'chiq</div></td></tr></table></section>
+  <section class="karta jadval"><table><tr><td class="sana">2026-11-13</td><td><strong>Jarayon progress.html orqali kuzatiladi; sahifa hujjatlardan avtomatik yasaladi (<code>npm run progress</code>, <code>npm run dev</code> oldidan)</strong><div class="xira">qo'lda yuritiladigan sahifa eskiradi, manba — sprint fayllari</div></td></tr><tr><td class="sana">2026-11-16</td><td><strong>Productionda test to'lovni faqat admin bosa oladi; Click/Payme ulanmaguncha bot mijozlarga e'lon qilinmaydi</strong><div class="xira">soxta &quot;to'landi&quot; xavfi</div></td></tr><tr><td class="sana">2026-11-16</td><td><strong>To'lanmagan onlayn zakaz 15 daqiqadan keyin avtomatik bekor; tekshiruv zakaz ochilganda + kunlik Vercel Cron</strong><div class="xira">foydalanuvchi qarori; Hobby'da cron kuniga bir marta</div></td></tr><tr><td class="sana">2026-11-16</td><td><strong>Telegram raqami veb orqali kirgan mijozniki bo'lsa — akkauntlar birlashtiriladi; raqam boshqa Telegram akkauntida bo'lsa — rad</strong><div class="xira">zakaz tarixi yo'qolmasin, begona raqam olinmasin</div></td></tr><tr><td class="sana">2026-11-16</td><td><strong>Mini App'da kirish: initData imzosi <code>Authorization: tma</code> header orqali (cookie emas), telefon bot orqali kontakt bilan</strong><div class="xira">Telegram Web iframe'ida cookie bloklanishi mumkin</div></td></tr><tr><td class="sana">2026-11-16</td><td><strong>Bot oqimi: /start → faqat &quot;Raqamni ulashish&quot; → &quot;Xush kelibsiz!&quot; + &quot;Taom buyurtma qilish&quot; (Mini App)</strong><div class="xira">foydalanuvchi belgilagan tartib</div></td></tr><tr><td class="sana">2026-11-16</td><td><strong>Hosting: Vercel + Neon (STACK.md'dagi Hetzner + Caddy + GitHub Actions o'rniga)</strong><div class="xira">Mini App HTTPS talab qiladi, server boshqaruvi kerak emas; foydalanuvchi qarori</div></td></tr><tr><td class="sana">2026-11-13</td><td><strong>Bekor qilishda avval holat shartli o'zgartiriladi, pul keyin qaytariladi; admin faqat keyingi holatga o'tkaza oladi</strong><div class="xira">admin va mijoz bir vaqtda bossa to'qnashuv bo'lmasin</div></td></tr></table></section>
 
   <h2>Commitlar</h2>
-  <section class="karta jadval"><table><tr><td class="sana">2026-11-13</td><td><code>8f6a2df</code> S3: telefon + OTP bilan kirish, sessiya va rollar</td></tr><tr><td class="sana">2026-11-13</td><td><code>8432339</code> Jarayon sahifasi: hujjatlardan progress.html yasaladi</td></tr><tr><td class="sana">2026-11-13</td><td><code>89bf23c</code> S2: to'liq model va kafening haqiqiy menyusi</td></tr><tr><td class="sana">2026-11-12</td><td><code>9f4dfe3</code> S1: zakaz kesimi — menyu, savatcha, olish vaqti va tasdiq</td></tr></table></section>
+  <section class="karta jadval"><table><tr><td class="sana">2026-11-13</td><td><code>5e45017</code> S4: holatlar, test to'lov, yetkazish narxi, bekor qilish va promokod</td></tr><tr><td class="sana">2026-11-13</td><td><code>8f6a2df</code> S3: telefon + OTP bilan kirish, sessiya va rollar</td></tr><tr><td class="sana">2026-11-13</td><td><code>8432339</code> Jarayon sahifasi: hujjatlardan progress.html yasaladi</td></tr><tr><td class="sana">2026-11-13</td><td><code>89bf23c</code> S2: to'liq model va kafening haqiqiy menyusi</td></tr><tr><td class="sana">2026-11-12</td><td><code>9f4dfe3</code> S1: zakaz kesimi — menyu, savatcha, olish vaqti va tasdiq</td></tr></table></section>
 
   <footer>Bu sahifa <code>npm run progress</code> bilan hujjatlardan avtomatik yasaladi — qo'lda tahrirlamang.</footer>
 </main>

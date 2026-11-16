@@ -1,6 +1,8 @@
+import { muddatiOtganlarniYop } from "@/lib/muddat";
 import { prisma } from "@/lib/prisma";
 import { javobXato, talabQil } from "@/lib/auth";
 import { testRejim } from "@/lib/tolov";
+import { holatXabari } from "@/lib/xabar";
 
 // POST /api/tolov/[id]/test — { natija: "tolandi" | "bekor" }
 // Faqat test rejimida: Click/Payme o'rnida to'lov natijasini qo'lda belgilaydi.
@@ -8,6 +10,11 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   if (!testRejim()) return javobXato("Test to'lov o'chirilgan", 404);
   const t = await talabQil();
   if (t.xato) return t.xato;
+  // Click/Payme ulanguncha productionda soxta "to'landi"ni faqat admin bosa oladi (DECISIONS.md)
+  if (process.env.NODE_ENV === "production" && !t.f.admin) {
+    return javobXato("Onlayn to'lov hali ulanmagan — tez orada ishga tushadi", 403);
+  }
+  await muddatiOtganlarniYop(); // 15 daqiqalik to'lov muddati (cron zaxirasi bilan)
   const id = Number((await params).id);
   const body = await request.json().catch(() => ({}));
   if (body.natija !== "tolandi" && body.natija !== "bekor") return javobXato("Natija noto'g'ri");
@@ -23,6 +30,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       prisma.tolov.update({ where: { id }, data: { holat: "TOLANDI" } }),
       prisma.zakaz.update({ where: { id: tolov.zakazId }, data: { holat: "TOLANDI" } }),
     ]);
+    await holatXabari(tolov.zakazId);
   } else {
     // To'lov rad etildi — zakaz to'lov kutilmoqda holatida qoladi, mijoz qayta urinishi yoki bekor qilishi mumkin
     await prisma.tolov.update({ where: { id }, data: { holat: "BEKOR" } });

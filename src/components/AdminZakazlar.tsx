@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/api";
 import { useCallback, useEffect, useState } from "react";
 import { HOLAT_NOMLARI, keyingiHolat } from "@/lib/holatlar";
 import { somFormat, tolovNomi, usulNomi, type Zakaz } from "@/lib/turlar";
@@ -14,7 +15,7 @@ export default function AdminZakazlar() {
 
   const yukla = useCallback(
     () =>
-      fetch("/api/admin/zakazlar")
+      api("/api/admin/zakazlar")
         .then(async (r) => {
           const data = await r.json();
           if (!r.ok) throw new Error(data.xato ?? "Yuklab bo'lmadi");
@@ -31,7 +32,7 @@ export default function AdminZakazlar() {
   const otkaz = async (z: AdminZakaz, holat: string) => {
     setBand(z.id);
     setXato(null);
-    const javob = await fetch(`/api/admin/zakazlar/${z.id}/holat`, {
+    const javob = await api(`/api/admin/zakazlar/${z.id}/holat`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ holat }),

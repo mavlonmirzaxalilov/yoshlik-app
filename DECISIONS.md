@@ -48,6 +48,12 @@ Format: `sana · qaror · sabab`
 - 2026-11-13 · Yetkazish narxi = bazaviy + yaxlitlangan km × km narxi, masofa brauzer geolokatsiyasidan to'g'ri chiziq; tarif va kafe nuqtasi vaqtincha test qiymatlar (.env) · foydalanuvchi qarori, haqiqiy raqamlar keyin
 - 2026-11-13 · Promokod foizli, chegirma faqat taomlar summasiga; bekor qilinsa ishlatish qaytariladi · foydalanuvchi qarori
 - 2026-11-13 · Bekor qilishda avval holat shartli o'zgartiriladi, pul keyin qaytariladi; admin faqat keyingi holatga o'tkaza oladi · admin va mijoz bir vaqtda bossa to'qnashuv bo'lmasin
+- 2026-11-16 · Hosting: Vercel + Neon (STACK.md'dagi Hetzner + Caddy + GitHub Actions o'rniga) · Mini App HTTPS talab qiladi, server boshqaruvi kerak emas; foydalanuvchi qarori
+- 2026-11-16 · Bot oqimi: /start → faqat "Raqamni ulashish" → "Xush kelibsiz!" + "Taom buyurtma qilish" (Mini App) · foydalanuvchi belgilagan tartib
+- 2026-11-16 · Mini App'da kirish: initData imzosi `Authorization: tma` header orqali (cookie emas), telefon bot orqali kontakt bilan · Telegram Web iframe'ida cookie bloklanishi mumkin
+- 2026-11-16 · Telegram raqami veb orqali kirgan mijozniki bo'lsa — akkauntlar birlashtiriladi; raqam boshqa Telegram akkauntida bo'lsa — rad · zakaz tarixi yo'qolmasin, begona raqam olinmasin
+- 2026-11-16 · To'lanmagan onlayn zakaz 15 daqiqadan keyin avtomatik bekor; tekshiruv zakaz ochilganda + kunlik Vercel Cron · foydalanuvchi qarori; Hobby'da cron kuniga bir marta
+- 2026-11-16 · Productionda test to'lovni faqat admin bosa oladi; Click/Payme ulanmaguncha bot mijozlarga e'lon qilinmaydi · soxta "to'landi" xavfi
 - 2026-11-13 · Jarayon progress.html orqali kuzatiladi; sahifa hujjatlardan avtomatik yasaladi (`npm run progress`, `npm run dev` oldidan) · qo'lda yuritiladigan sahifa eskiradi, manba — sprint fayllari
 
 ## OCHIQ SAVOLLAR

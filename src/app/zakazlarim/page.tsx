@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,7 +13,7 @@ export default function ZakazlarimSahifasi() {
   const [xato, setXato] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/men/zakazlar")
+    api("/api/men/zakazlar")
       .then(async (r) => {
         const data = await r.json();
         if (r.status === 401) router.replace("/kirish?qaytish=/zakazlarim");

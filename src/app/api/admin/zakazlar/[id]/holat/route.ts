@@ -1,3 +1,4 @@
+import { holatXabari } from "@/lib/xabar";
 import { prisma } from "@/lib/prisma";
 import { javobXato, talabQil } from "@/lib/auth";
 import { HOLAT_NOMLARI, keyingiHolat, type ZakazHolati } from "@/lib/holatlar";
@@ -21,5 +22,6 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   // Shartli yangilash: shu orada mijoz bekor qilgan bo'lsa o'tish bajarilmaydi
   const { count } = await prisma.zakaz.updateMany({ where: { id, holat: zakaz.holat }, data: { holat: kutilgan } });
   if (!count) return javobXato("Zakaz holati o'zgargan — sahifani yangilang", 409);
+  await holatXabari(id);
   return Response.json({ id, holat: kutilgan });
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/api";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -16,7 +17,7 @@ export default function ZakazTasdiq() {
 
   const yukla = useCallback(
     () =>
-      fetch(`/api/zakazlar/${id}`)
+      api(`/api/zakazlar/${id}`)
         .then(async (r) => {
           const data = await r.json();
           if (r.status === 401) {
@@ -38,7 +39,7 @@ export default function ZakazTasdiq() {
     if (!confirm("Zakazni bekor qilasizmi?")) return;
     setBand(true);
     setXato(null);
-    const javob = await fetch(`/api/zakazlar/${id}/bekor`, { method: "POST" });
+    const javob = await api(`/api/zakazlar/${id}/bekor`, { method: "POST" });
     const data = await javob.json();
     if (!javob.ok) setXato(data.xato ?? "Bekor qilib bo'lmadi");
     await yukla();

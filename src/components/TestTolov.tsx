@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { somFormat, tolovNomi, type TolovUsuli } from "@/lib/turlar";
@@ -22,7 +23,7 @@ export default function TestTolov() {
   const [xato, setXato] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`/api/tolov/${id}`)
+    api(`/api/tolov/${id}`)
       .then(async (r) => {
         const data = await r.json();
         if (r.status === 401) return router.replace(`/kirish?qaytish=/tolov/${id}`);
@@ -35,7 +36,7 @@ export default function TestTolov() {
   const natija = async (n: "tolandi" | "bekor") => {
     setBand(true);
     setXato(null);
-    const javob = await fetch(`/api/tolov/${id}/test`, {
+    const javob = await api(`/api/tolov/${id}/test`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ natija: n }),

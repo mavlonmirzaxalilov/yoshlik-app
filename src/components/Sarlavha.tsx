@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/api";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,7 +14,7 @@ export default function Sarlavha() {
 
   useEffect(() => {
     const yukla = () =>
-      fetch("/api/men")
+      api("/api/men")
         .then((r) => r.json())
         .then(setMen)
         .catch(() => setMen({ mijoz: null, admin: false }));

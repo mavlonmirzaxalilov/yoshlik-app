@@ -1,3 +1,4 @@
+import { muddatiOtganlarniYop } from "@/lib/muddat";
 import { prisma } from "@/lib/prisma";
 import { javobXato, talabQil } from "@/lib/auth";
 import { testRejim } from "@/lib/tolov";
@@ -6,6 +7,7 @@ import { testRejim } from "@/lib/tolov";
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const t = await talabQil();
   if (t.xato) return t.xato;
+  await muddatiOtganlarniYop(); // 15 daqiqalik to'lov muddati (cron zaxirasi bilan)
   const id = Number((await params).id);
   if (!Number.isInteger(id)) return javobXato("To'lov raqami noto'g'ri");
   const tolov = await prisma.tolov.findUnique({

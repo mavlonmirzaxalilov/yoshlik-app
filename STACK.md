@@ -17,6 +17,16 @@ qatorda yozilgan. Maqsad: o'ylashni stackka emas, mahsulotga sarflash.
 | **Hetzner** | Arzon va barqaror server; soatlik hisob, istagan vaqtda o'chiriladi |
 | **Telegram Mini App** | Auditoriya allaqachon Telegramda; alohida ilova yuklatish shart emas (S5) |
 
+## O'zgarish (2026-11-16): hosting — Vercel + Neon
+
+Caddy + GitHub Actions + Hetzner o'rniga **Vercel** (hosting, HTTPS, GitHub'dan avtomatik deploy, cron)
+va **Neon** (bulutdagi PostgreSQL, Vercel Marketplace orqali). Lokal ishlab chiqishda PostgreSQL
+avvalgidek Docker'da.
+
+**Nega:** Telegram Mini App'ga HTTPS manzil kerak; Vercel uni server sozlamasdan beradi, kichik jamoa
+uchun server boshqaruvi yo'qoladi. Foydalanuvchi qarori — DECISIONS.md.
+**E'tibor:** Vercel'ning bepul Hobby tarifi notijorat foydalanish uchun — kafe ishga tushganda Pro tarif kerak.
+
 ## Nega aynan shu to'plam
 
 1. **Claude shu ekotizimni eng chuqur biladi.** Next.js + TypeScript + Prisma —

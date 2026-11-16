@@ -1,6 +1,7 @@
 import { createHash, randomBytes, randomInt } from "node:crypto";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import { initDataTekshir, type TelegramUser } from "@/lib/telegram";
 
 export const SESSIYA_COOKIE = "sessiya";
 const SESSIYA_KUN = 30;
@@ -100,19 +101,54 @@ export type Foydalanuvchi = {
   admin: boolean;
 };
 
-/** Cookie'dagi sessiya bo'yicha joriy foydalanuvchi; kirmagan bo'lsa null. */
+const MIJOZ_MAYDONLARI = { id: true, ism: true, telefon: true } as const;
+
+// Admin: telefoni ADMIN_TELEFONLAR (Vercel'da maxfiy sozlama) ro'yxatida yoki Admin jadvalida bo'lsa.
+const envAdminlar = () =>
+  (process.env.ADMIN_TELEFONLAR ?? "")
+    .split(",")
+    .map((t) => telefonniTozala(t.trim()))
+    .filter(Boolean);
+
+export async function adminmi(telefon: string | null) {
+  if (!telefon) return false;
+  if (envAdminlar().includes(telefon)) return true;
+  return (await prisma.admin.count({ where: { telefon } })) > 0;
+}
+
+/** Telegram foydalanuvchisi bo'yicha mijozni topadi yoki yaratadi (telefon keyin bot orqali keladi). */
+export async function telegramMijoz(user: TelegramUser) {
+  const ism = [user.first_name, user.last_name].filter(Boolean).join(" ") || null;
+  return prisma.mijoz.upsert({
+    where: { telegramId: BigInt(user.id) },
+    update: {},
+    create: { telegramId: BigInt(user.id), ism },
+    select: MIJOZ_MAYDONLARI,
+  });
+}
+
+/**
+ * Joriy foydalanuvchi; kirmagan bo'lsa null.
+ * 1) Telegram Mini App: "Authorization: tma <initData>" (cookie'siz — Telegram Web iframe'ida cookie bloklanishi mumkin).
+ * 2) Veb: S3 cookie sessiyasi.
+ */
 export async function joriyFoydalanuvchi(): Promise<Foydalanuvchi | null> {
+  const auth = (await headers()).get("authorization");
+  if (auth?.startsWith("tma ")) {
+    const user = initDataTekshir(auth.slice(4));
+    if (!user) return null;
+    const mijoz = await telegramMijoz(user);
+    return { mijoz, admin: await adminmi(mijoz.telefon) };
+  }
+
   const token = (await cookies()).get(SESSIYA_COOKIE)?.value;
   if (!token) return null;
   const sessiya = await prisma.sessiya.findUnique({
     where: { id: xesh(token) },
-    include: { mijoz: { select: { id: true, ism: true, telefon: true } } },
+    include: { mijoz: { select: MIJOZ_MAYDONLARI } },
   });
   if (!sessiya || sessiya.muddati < new Date()) return null;
-  const admin = sessiya.mijoz.telefon
-    ? (await prisma.admin.count({ where: { telefon: sessiya.mijoz.telefon } })) > 0
-    : false;
-  return { mijoz: sessiya.mijoz, admin };
+  return { mijoz: sessiya.mijoz, admin: await adminmi(sessiya.mijoz.telefon) };
 }
 
 export const javobXato = (xabar: string, status = 400) => Response.json({ xato: xabar }, { status });

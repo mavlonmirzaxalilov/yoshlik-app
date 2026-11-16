@@ -1,5 +1,4 @@
-import { prisma } from "@/lib/prisma";
-import { AuthXato, javobXato, otpTekshir, telefonniTozala } from "@/lib/auth";
+import { adminmi, AuthXato, javobXato, otpTekshir, telefonniTozala } from "@/lib/auth";
 
 // POST /api/auth/tekshir — { telefon, kod } — kodni tekshirib sessiya ochish
 export async function POST(request: Request) {
@@ -11,7 +10,7 @@ export async function POST(request: Request) {
 
   try {
     const mijoz = await otpTekshir(telefon, kod);
-    const admin = (await prisma.admin.count({ where: { telefon } })) > 0;
+    const admin = await adminmi(telefon);
     return Response.json({ mijoz: { id: mijoz.id, ism: mijoz.ism, telefon: mijoz.telefon }, admin });
   } catch (e) {
     if (e instanceof AuthXato) return javobXato(e.message, e.status);

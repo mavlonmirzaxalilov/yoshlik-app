@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { talabQil } from "@/lib/auth";
+import { holatXabari } from "@/lib/xabar";
 import { promokodTekshir } from "@/lib/promokod";
 import { testRejim, tolovManzili } from "@/lib/tolov";
 import { hozirgiVaqtToshkent, vaqtTogrimi } from "@/lib/vaqt";
@@ -23,6 +24,8 @@ const xato = (xabar: string, status = 400) => Response.json({ xato: xabar }, { s
 export async function POST(request: Request) {
   const t = await talabQil();
   if (t.xato) return t.xato;
+  // PRD: telefon zakazni aniqlashtirish uchun kerak (Telegram'da raqam ulashilmagan bo'lishi mumkin)
+  if (!t.f.mijoz.telefon) return xato("Avval telefon raqamingizni ulashing", 403);
 
   let body: Sorov;
   try {
@@ -107,6 +110,9 @@ export async function POST(request: Request) {
         : null;
       return { zakaz, tolov };
     });
+
+    // Naqd zakaz darhol qabul qilinadi; onlayn — to'lovdan keyin xabar boradi
+    if (!natija.tolov) await holatXabari(natija.zakaz.id);
 
     return Response.json(
       {

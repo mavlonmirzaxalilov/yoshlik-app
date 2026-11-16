@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/api";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { sessiyaOzgardi } from "@/lib/sessiyaKlient";
@@ -21,7 +22,7 @@ export default function KirishFormasi() {
     setBand(true);
     setXato(null);
     try {
-      const javob = await fetch(url, {
+      const javob = await api(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

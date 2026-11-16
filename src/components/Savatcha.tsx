@@ -1,5 +1,6 @@
 "use client";
 
+import { api, telegramWebApp } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { OLISH_USULLARI, somFormat, tolovUsullari, type OlishUsuli, type Taom, type TolovUsuli } from "@/lib/turlar";
@@ -31,6 +32,7 @@ export default function Savatcha({ qatorlar, soniniOzgartir }: Props) {
   const [promoXato, setPromoXato] = useState<string | null>(null);
   const [yuborilmoqda, setYuborilmoqda] = useState(false);
   const [xato, setXato] = useState<string | null>(null);
+  const [raqamKerak, setRaqamKerak] = useState(false);
 
   const taomlarSumma = qatorlar.reduce((s, q) => s + q.taom.narx * q.soni, 0);
   const chegirma = promo ? Math.floor((taomlarSumma * promo.foiz) / 100) : 0;
@@ -41,7 +43,7 @@ export default function Savatcha({ qatorlar, soniniOzgartir }: Props) {
   // Kirgan mijozning saqlangan manzillari (kirmagan bo'lsa bo'sh qoladi)
   useEffect(() => {
     if (usul !== "YETKAZISH") return;
-    fetch("/api/men/manzillar")
+    api("/api/men/manzillar")
       .then((r) => (r.ok ? r.json() : []))
       .then(setManzillar)
       .catch(() => setManzillar([]));
@@ -50,7 +52,7 @@ export default function Savatcha({ qatorlar, soniniOzgartir }: Props) {
   // Yetkazish narxi joylashuv va summa o'zgarganda qayta hisoblanadi (minimal summa summaga bog'liq)
   useEffect(() => {
     if (usul !== "YETKAZISH" || !nuqta) return;
-    fetch("/api/yetkazish/narx", {
+    api("/api/yetkazish/narx", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...nuqta, summa: taomlarSumma }),
@@ -60,6 +62,27 @@ export default function Savatcha({ qatorlar, soniniOzgartir }: Props) {
       .catch(() => setYetkazish(null));
   }, [usul, nuqta, taomlarSumma]);
 
+  // Telegram ichida raqami yo'q mijoz (menyu tugmasidan to'g'ridan-to'g'ri kirgan) — raqam so'raladi
+  useEffect(() => {
+    if (!telegramWebApp()) return;
+    api("/api/men")
+      .then((r) => r.json())
+      .then((d) => setRaqamKerak(Boolean(d.mijoz) && !d.mijoz.telefon))
+      .catch(() => {});
+  }, []);
+
+  const raqamUlash = () => {
+    telegramWebApp()?.requestContact?.(async (ok) => {
+      if (!ok) return;
+      // Raqam bot webhook orqali keladi — bir necha soniya ichida tekshiramiz
+      for (let i = 0; i < 10; i++) {
+        await new Promise((r) => setTimeout(r, 1000));
+        const d = await api("/api/men").then((r) => r.json());
+        if (d.mijoz?.telefon) return setRaqamKerak(false);
+      }
+    });
+  };
+
   // Naqd faqat yetkazishda — usul o'zgarsa to'lov usuli tekshiriladi
   const usulniTanla = (u: OlishUsuli) => {
     setUsul(u);
@@ -68,6 +91,15 @@ export default function Savatcha({ qatorlar, soniniOzgartir }: Props) {
 
   const joylashuvYubor = () => {
     setJoylashuvXato(null);
+    // Telegram ichida — Telegram'ning o'z joylashuv so'rovi (Bot API 8.0+), bo'lmasa brauzer geolokatsiyasi
+    const lm = telegramWebApp()?.LocationManager;
+    if (lm) {
+      const ol = () =>
+        lm.getLocation((d) =>
+          d ? setNuqta({ lat: d.latitude, lng: d.longitude }) : setJoylashuvXato("Joylashuvga ruxsat berilmadi"),
+        );
+      return lm.isInited ? ol() : lm.init(ol);
+    }
     if (!navigator.geolocation) return setJoylashuvXato("Brauzer joylashuvni bera olmaydi");
     navigator.geolocation.getCurrentPosition(
       (p) => setNuqta({ lat: p.coords.latitude, lng: p.coords.longitude }),
@@ -78,7 +110,7 @@ export default function Savatcha({ qatorlar, soniniOzgartir }: Props) {
 
   const promoQolla = async () => {
     setPromoXato(null);
-    const javob = await fetch("/api/promokod/tekshir", {
+    const javob = await api("/api/promokod/tekshir", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ kod: promokod, summa: taomlarSumma }),
@@ -93,7 +125,7 @@ export default function Savatcha({ qatorlar, soniniOzgartir }: Props) {
     setYuborilmoqda(true);
     setXato(null);
     try {
-      const javob = await fetch("/api/zakazlar", {
+      const javob = await api("/api/zakazlar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -301,9 +333,22 @@ export default function Savatcha({ qatorlar, soniniOzgartir }: Props) {
           )}
           {xato && <p className="mt-3 text-red-600">{xato}</p>}
 
+          {raqamKerak && (
+            <div className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
+              Zakaz berish uchun telefon raqamingizni ulashing.
+              <button
+                type="button"
+                onClick={raqamUlash}
+                className="mt-2 block w-full rounded-lg border border-amber-600 py-2 font-medium"
+              >
+                📱 Raqamni ulashish
+              </button>
+            </div>
+          )}
+
           <button
             onClick={zakazBer}
-            disabled={yuborilmoqda || !vaqt || !yetkazishTayyor || tugaganlar.length > 0}
+            disabled={yuborilmoqda || raqamKerak || !vaqt || !yetkazishTayyor || tugaganlar.length > 0}
             className="mt-5 w-full rounded-lg bg-emerald-600 py-3 font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
           >
             {yuborilmoqda

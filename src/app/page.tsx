@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/api";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Savatcha, { type SavatchaQatori } from "@/components/Savatcha";
 import TaomDetali from "@/components/TaomDetali";
@@ -20,7 +21,7 @@ export default function MenyuSahifasi() {
   useEffect(() => {
     const saqlangan = savatchaniOqi();
     const tiklash = saqlangan.length
-      ? fetch("/api/taomlar")
+      ? api("/api/taomlar")
           .then((r) => (r.ok ? r.json() : []))
           .then((hammasi: Taom[]) => {
             setSavatcha(
@@ -39,7 +40,7 @@ export default function MenyuSahifasi() {
   }, [savatcha, tiklandi]);
 
   useEffect(() => {
-    fetch("/api/kategoriyalar")
+    api("/api/kategoriyalar")
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then(setKategoriyalar)
       .catch(() => setXato("Menyuni yuklab bo'lmadi"));
@@ -47,7 +48,7 @@ export default function MenyuSahifasi() {
 
   useEffect(() => {
     const url = tanlangan ? `/api/taomlar?kategoriya=${tanlangan}` : "/api/taomlar";
-    fetch(url)
+    api(url)
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then(setTaomlar)
       .catch(() => setXato("Menyuni yuklab bo'lmadi"));

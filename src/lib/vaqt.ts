@@ -8,4 +8,10 @@ export function hozirgiVaqtToshkent(): string {
   }).format(new Date());
 }
 
+/** Toshkentdagi bugungi kun boshi (UTC Date sifatida). Toshkent UTC+5, yozgi vaqt yo'q. */
+export function bugunBoshiToshkent(): Date {
+  const sana = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Tashkent" }).format(new Date()); // YYYY-MM-DD
+  return new Date(`${sana}T00:00:00+05:00`);
+}
+
 export const vaqtTogrimi = (v: unknown): v is string => typeof v === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(v);

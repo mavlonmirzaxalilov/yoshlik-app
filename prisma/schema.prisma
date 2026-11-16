@@ -6,7 +6,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL") // Neon: pooled ulanish (ilova uchun)
+  directUrl = env("DATABASE_URL_UNPOOLED") // Neon: to'g'ridan-to'g'ri ulanish (migratsiya uchun)
 }
 
 model Kategoriya {

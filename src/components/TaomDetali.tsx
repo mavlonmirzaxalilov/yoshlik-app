@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/api";
 import { useEffect, useState } from "react";
 import TaomRasmi from "@/components/TaomRasmi";
 import { somFormat, type Taom } from "@/lib/turlar";
@@ -16,7 +17,7 @@ export default function TaomDetali({ taomId, yopish, qoshish }: Props) {
   const [xato, setXato] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`/api/taomlar/${taomId}`)
+    api(`/api/taomlar/${taomId}`)
       .then(async (r) => {
         const data = await r.json();
         if (!r.ok) throw new Error(data.xato ?? "Taom topilmadi");

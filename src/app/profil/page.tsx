@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { sessiyaOzgardi } from "@/lib/sessiyaKlient";
@@ -16,14 +17,14 @@ export default function ProfilSahifasi() {
   const [xato, setXato] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/men")
+    api("/api/men")
       .then((r) => r.json())
       .then((d) => {
         if (!d.mijoz) return router.replace("/kirish?qaytish=/profil");
         setTelefon(d.mijoz.telefon);
         setIsm(d.mijoz.ism ?? "");
       });
-    fetch("/api/men/manzillar")
+    api("/api/men/manzillar")
       .then((r) => (r.ok ? r.json() : []))
       .then(setManzillar);
   }, [router]);
@@ -31,7 +32,7 @@ export default function ProfilSahifasi() {
   const sorov = async (url: string, method: string, body?: object) => {
     setXato(null);
     setXabar(null);
-    const javob = await fetch(url, {
+    const javob = await api(url, {
       method,
       headers: { "Content-Type": "application/json" },
       body: body ? JSON.stringify(body) : undefined,
@@ -66,7 +67,7 @@ export default function ProfilSahifasi() {
   };
 
   const chiq = async () => {
-    await fetch("/api/auth/chiqish", { method: "POST" });
+    await api("/api/auth/chiqish", { method: "POST" });
     sessiyaOzgardi();
     router.push("/");
   };

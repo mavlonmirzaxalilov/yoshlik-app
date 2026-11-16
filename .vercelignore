@@ -1,0 +1,8 @@
+# Deployga yuklanmaydi: maxfiy sozlamalar va lokal fayllar
+.env
+.env.*
+!.env.example
+.vibecoding/hisobot-ok
+.vibecoding/hisobot-urinish.json
+node_modules
+.next
